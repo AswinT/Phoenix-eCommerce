@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Admin - Error <%= status %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/admin/error.css">
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-status"><%= status || 500 %></div>
+        <div class="error-message"><%= message || 'An error occurred' %></div>
+        
+        <% if (process.env.NODE_ENV === 'development' && error) { %>
+        <div class="error-details">
+            <pre><%= error %></pre>
+        </div>
+        <% } %>
+        
+        <div class="error-actions">
+            <a href="/admin/dashboard" class="btn-primary">Return to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,117 @@
+<!-- 404 Error Page for Phoenix Headphones -->
+
+<div class="error-404-container">
+    <div class="error-404-content">
+        <!-- Error Illustration -->
+        <div class="error-illustration">
+            <div class="headphones-icon">
+                <span class="material-icons">headset_off</span>
+            </div>
+            <div class="error-number">404</div>
+        </div>
+        
+        <!-- Error Message -->
+        <div class="error-text">
+            <h1 class="error-title">Oops! Page Not Found</h1>
+            <p class="error-description">
+                The page you're looking for seems to have gone silent. 
+                Don't worry, let's get you back to the music!
+            </p>
+        </div>
+        
+        <!-- Search Section -->
+        <div class="error-search">
+            <h3>Looking for something specific?</h3>
+            <form action="/products" method="GET" class="search-form">
+                <div class="search-input-group">
+                    <input type="text" name="search" placeholder="Search for headphones..." class="search-input">
+                    <button type="submit" class="search-btn">
+                        <span class="material-icons">search</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Quick Navigation -->
+        <div class="error-navigation">
+            <h3>Or explore these popular sections:</h3>
+            <div class="nav-cards">
+                <a href="/" class="nav-card">
+                    <span class="material-icons">home</span>
+                    <span class="nav-text">Home</span>
+                </a>
+                <a href="/products" class="nav-card">
+                    <span class="material-icons">headphones</span>
+                    <span class="nav-text">All Products</span>
+                </a>
+                <a href="/products?category=wireless" class="nav-card">
+                    <span class="material-icons">bluetooth</span>
+                    <span class="nav-text">Wireless</span>
+                </a>
+                <a href="/products?category=gaming" class="nav-card">
+                    <span class="material-icons">sports_esports</span>
+                    <span class="nav-text">Gaming</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Popular Products Section -->
+        <div class="error-products">
+            <h3>Popular Headphones</h3>
+            <div class="product-suggestions">
+                <div class="suggestion-card">
+                    <div class="suggestion-icon">
+                        <span class="material-icons">star</span>
+                    </div>
+                    <div class="suggestion-text">
+                        <h4>Best Sellers</h4>
+                        <p>Check out our most popular headphones</p>
+                    </div>
+                    <a href="/products?sort=popularity" class="suggestion-link">
+                        <span class="material-icons">arrow_forward</span>
+                    </a>
+                </div>
+                
+                <div class="suggestion-card">
+                    <div class="suggestion-icon">
+                        <span class="material-icons">local_offer</span>
+                    </div>
+                    <div class="suggestion-text">
+                        <h4>Special Offers</h4>
+                        <p>Discover amazing deals and discounts</p>
+                    </div>
+                    <a href="/products?filter=sale" class="suggestion-link">
+                        <span class="material-icons">arrow_forward</span>
+                    </a>
+                </div>
+                
+                <div class="suggestion-card">
+                    <div class="suggestion-icon">
+                        <span class="material-icons">new_releases</span>
+                    </div>
+                    <div class="suggestion-text">
+                        <h4>New Arrivals</h4>
+                        <p>Latest headphones just added</p>
+                    </div>
+                    <a href="/products?sort=newest" class="suggestion-link">
+                        <span class="material-icons">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Back Button -->
+        <div class="error-actions">
+            <button onclick="history.back()" class="btn btn-secondary">
+                <span class="material-icons">arrow_back</span>
+                Go Back
+            </button>
+            <a href="/" class="btn btn-primary">
+                <span class="material-icons">home</span>
+                Return to Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/css/user/404.css">

@@ -1,0 +1,757 @@
+<div class="product-detail-page">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="/" class="breadcrumb-item">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="/products" class="breadcrumb-item">Products</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active"><%= product.name %></span>
+        </div>
+
+        <div class="product-detail-container">
+            <!-- Product Images -->
+            <div class="product-images">
+                <div class="product-image-container">
+                    <img src="<%= product.mainImage %>" alt="<%= product.name %>" class="product-image" id="main-product-image">
+                    <div class="img-zoom-lens"></div>
+                </div>
+                
+                <div class="product-thumbnails">
+                    <% product.images.forEach(function(image, index) { %>
+                        <div class="thumbnail <%= image.isMain ? 'active' : '' %>" data-src="<%= image.url %>">
+                            <img src="<%= image.url %>" alt="<%= product.name %> - Image <%= index + 1 %>">
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info">
+                <h1 class="product-title"><%= product.name %></h1>
+                
+                <div class="product-meta">
+                    <span class="product-brand">By <%= product.brand %></span>
+                    <span class="product-separator">|</span>
+                    <span class="product-model">Model: <%= product.modelNumber %></span>
+                </div>
+                
+                <div class="product-rating">
+                    <div class="stars">
+                        <% for (let i = 1; i <= 5; i++) { %>
+                            <span class="material-icons">
+                                <% if (i <= Math.floor(product.ratings.average)) { %>
+                                    star
+                                <% } else if (i - 0.5 <= product.ratings.average) { %>
+                                    star_half
+                                <% } else { %>
+                                    star_outline
+                                <% } %>
+                            </span>
+                        <% } %>
+                    </div>
+                    <a href="#reviews" class="rating-count">
+                        <%= product.ratings.average.toFixed(1) %> (<%= product.ratings.count %> <%= product.ratings.count === 1 ? 'review' : 'reviews' %>)
+                    </a>
+                </div>
+                
+                <div class="product-price">
+                    <% if (product.discountPercentage > 0) { %>
+                        <span class="regular-price">₹<%= product.regularPrice.toFixed(2) %></span>
+                        <span class="discount-badge">-<%= product.discountPercentage %>%</span>
+                    <% } %>
+                    <span class="sale-price">₹<%= product.salePrice.toFixed(2) %></span>
+                </div>
+                
+                <div class="product-availability">
+                    <% if (product.stock > 0) { %>
+                        <span class="in-stock">
+                            <span class="material-icons">check_circle</span>
+                            In Stock (<%= product.stock %> available)
+                        </span>
+                    <% } else { %>
+                        <span class="out-of-stock">
+                            <span class="material-icons">error</span>
+                            Out of Stock
+                        </span>
+                    <% } %>
+                </div>
+                
+                <div class="product-description">
+                    <h2>Description</h2>
+                    <p><%= product.description %></p>
+                </div>
+                
+                <div class="product-specs">
+                    <h2>Highlights</h2>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">Driver Size:</span> <%= product.driverSize %></li>
+                        <li><span class="spec-label">Connectivity:</span> <%= product.connectivity %></li>
+                        <li><span class="spec-label">Noise Cancellation:</span> <%= product.noiseCancellation ? 'Yes' : 'No' %></li>
+                        <li><span class="spec-label">Microphone:</span> <%= product.microphoneIncluded ? 'Yes' : 'No' %></li>
+                        <li><span class="spec-label">Color:</span> <%= product.color %></li>
+                        <li><span class="spec-label">Warranty:</span> <%= product.warranty %></li>
+                    </ul>
+                </div>
+
+                <div class="product-actions">
+                    <% if (product.stock > 0) { %>
+                        <button class="btn btn-primary btn-lg">
+                            <span class="material-icons">shopping_cart</span>
+                            Add to Cart
+                        </button>
+                    <% } else { %>
+                        <button class="btn btn-primary btn-lg" disabled>
+                            <span class="material-icons">shopping_cart</span>
+                            Out of Stock
+                        </button>
+                    <% } %>
+                    <button class="btn btn-outline-primary btn-lg" id="wishlistBtn" data-product-id="<%= product._id %>">
+                        <span class="material-icons wishlist-icon">favorite_border</span>
+                        <span class="wishlist-text">Add to Wishlist</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section" id="reviews">
+            <h2 class="section-title">Customer Reviews</h2>
+
+            <div class="reviews-summary">
+                <div class="rating-overview">
+                    <div class="average-rating">
+                        <span class="rating-number"><%= product.ratings.average.toFixed(1) %></span>
+                        <div class="stars">
+                            <% for (let i = 1; i <= 5; i++) { %>
+                                <span class="material-icons">
+                                    <% if (i <= Math.floor(product.ratings.average)) { %>
+                                        star
+                                    <% } else if (i - 0.5 <= product.ratings.average) { %>
+                                        star_half
+                                    <% } else { %>
+                                        star_outline
+                                    <% } %>
+                                </span>
+                            <% } %>
+                        </div>
+                        <span class="review-count">Based on <%= product.ratings.count %> <%= product.ratings.count === 1 ? 'review' : 'reviews' %></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reviews-container">
+                <div class="reviews-header">
+                    <div class="reviews-sort">
+                        <select id="reviewsSort" class="form-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="highest">Highest Rating</option>
+                            <option value="lowest">Lowest Rating</option>
+                            <option value="helpful">Most Helpful</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="reviews-list" id="reviewsList">
+                    <!-- Reviews will be loaded here via JavaScript -->
+                    <div class="loading-reviews">
+                        <div class="spinner"></div>
+                        <p>Loading reviews...</p>
+                    </div>
+                </div>
+
+                <div class="reviews-pagination" id="reviewsPagination">
+                    <!-- Pagination will be loaded here via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <section class="related-products" aria-labelledby="related-products-heading">
+            <div class="related-products-header">
+                <h2 id="related-products-heading" class="section-title">You May Also Like</h2>
+                <p class="section-subtitle">Discover similar products that other customers loved</p>
+            </div>
+
+            <div class="related-products-container">
+                <% if (typeof relatedProducts !== 'undefined' && relatedProducts.length > 0) { %>
+                    <div class="related-products-grid">
+                        <% relatedProducts.forEach(function(product, index) { %>
+                            <article class="related-product-card" data-product-id="<%= product._id %>">
+                                <div class="product-image-wrapper">
+                                    <a href="/product/<%= product._id %>" class="product-image-link"
+                                       aria-label="View details for <%= product.name %>">
+                                        <img src="<%= product.mainImage %>"
+                                             alt="<%= product.name %>"
+                                             loading="lazy"
+                                             class="product-image">
+                                    </a>
+                                    <% if (product.discountPercentage > 0) { %>
+                                        <span class="discount-badge" aria-label="<%= product.discountPercentage %>% discount">
+                                            -<%= product.discountPercentage %>%
+                                        </span>
+                                    <% } %>
+                                    <div class="product-overlay">
+                                        <button class="quick-view-btn"
+                                                onclick="quickView('<%= product._id %>')"
+                                                aria-label="Quick view for <%= product.name %>">
+                                            <span class="material-icons">visibility</span>
+                                        </button>
+                                        <button class="wishlist-btn"
+                                                onclick="toggleWishlist('<%= product._id %>')"
+                                                aria-label="Add <%= product.name %> to wishlist">
+                                            <span class="material-icons">favorite_border</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="product-info">
+                                    <h3 class="product-title">
+                                        <a href="/product/<%= product._id %>" class="product-title-link">
+                                            <%= product.name %>
+                                        </a>
+                                    </h3>
+
+                                    <% if (product.categoryId && product.categoryId.name) { %>
+                                        <p class="product-category"><%= product.categoryId.name %></p>
+                                    <% } %>
+
+                                    <div class="product-rating" aria-label="Rating: <%= product.ratings.average.toFixed(1) %> out of 5 stars">
+                                        <div class="stars" role="img" aria-hidden="true">
+                                            <% for (let i = 1; i <= 5; i++) { %>
+                                                <span class="material-icons star">
+                                                    <% if (i <= Math.floor(product.ratings.average)) { %>
+                                                        star
+                                                    <% } else if (i - 0.5 <= product.ratings.average) { %>
+                                                        star_half
+                                                    <% } else { %>
+                                                        star_outline
+                                                    <% } %>
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                        <span class="rating-text">
+                                            (<%= product.ratings.count %> <%= product.ratings.count === 1 ? 'review' : 'reviews' %>)
+                                        </span>
+                                    </div>
+
+                                    <div class="product-pricing">
+                                        <% if (product.discountPercentage > 0) { %>
+                                            <span class="original-price" aria-label="Original price">
+                                                ₹<%= product.regularPrice.toFixed(2) %>
+                                            </span>
+                                        <% } %>
+                                        <span class="current-price" aria-label="Current price">
+                                            ₹<%= product.salePrice.toFixed(2) %>
+                                        </span>
+                                        <% if (product.discountPercentage > 0) { %>
+                                            <span class="savings" aria-label="You save">
+                                                Save ₹<%= (product.regularPrice - product.salePrice).toFixed(2) %>
+                                            </span>
+                                        <% } %>
+                                    </div>
+
+                                    <div class="product-actions">
+                                        <% if (product.stock > 0) { %>
+                                            <button class="btn btn-primary add-to-cart-btn"
+                                                    onclick="addToCart('<%= product._id %>')"
+                                                    aria-label="Add <%= product.name %> to cart">
+                                                <span class="material-icons">shopping_cart</span>
+                                                <span class="btn-text">Add to Cart</span>
+                                            </button>
+                                        <% } else { %>
+                                            <button class="btn btn-secondary" disabled aria-label="Out of stock">
+                                                <span class="material-icons">inventory_2</span>
+                                                <span class="btn-text">Out of Stock</span>
+                                            </button>
+                                        <% } %>
+                                        <a href="/product/<%= product._id %>"
+                                           class="btn btn-outline view-details-btn"
+                                           aria-label="View full details for <%= product.name %>">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <div class="no-related-products">
+                        <div class="no-products-icon">
+                            <span class="material-icons">inventory_2</span>
+                        </div>
+                        <h3>No Related Products Found</h3>
+                        <p>We couldn't find any related products at the moment. Check back later for recommendations!</p>
+                        <a href="/products" class="btn btn-primary">Browse All Products</a>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.product-image-container');
+        const lens = document.querySelector('.img-zoom-lens');
+        const image = document.querySelector('.product-image');
+
+        function moveLens(e) {
+            let pos = getCursorPos(e);
+            let x = pos.x - (lens.offsetWidth / 2);
+            let y = pos.y - (lens.offsetHeight / 2);
+
+            // Prevent lens from going outside image
+            if (x > container.offsetWidth - lens.offsetWidth) {
+                x = container.offsetWidth - lens.offsetWidth;
+            }
+            if (x < 0) {x = 0;}
+            if (y > container.offsetHeight - lens.offsetHeight) {
+                y = container.offsetHeight - lens.offsetHeight;
+            }
+            if (y < 0) {y = 0;}
+
+            // Move the lens
+            lens.style.left = x + "px";
+            lens.style.top = y + "px";
+
+            // Move the zoomed image
+            let percentX = (x / (container.offsetWidth - lens.offsetWidth)) * 100;
+            let percentY = (y / (container.offsetHeight - lens.offsetHeight)) * 100;
+            image.style.transformOrigin = `${percentX}% ${percentY}%`;
+        }
+
+        function getCursorPos(e) {
+            let rect = container.getBoundingClientRect();
+            let x = e.pageX - rect.left - window.pageXOffset;
+            let y = e.pageY - rect.top - window.pageYOffset;
+            return {x, y};
+        }
+
+        container.addEventListener('mousemove', moveLens);
+        container.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            moveLens(e.touches[0]);
+        });
+
+        // Thumbnail functionality
+        function initThumbnails() {
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            const mainImage = document.getElementById('main-product-image');
+            
+            if (thumbnails.length && mainImage) {
+                thumbnails.forEach(thumbnail => {
+                    thumbnail.addEventListener('click', function() {
+                        const imgSrc = this.getAttribute('data-src');
+                        
+                        // Update main image
+                        mainImage.src = imgSrc;
+                        
+                        // Update active state
+                        thumbnails.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+            }
+        }
+
+        initThumbnails();
+
+        const wishlistBtn = document.getElementById('wishlistBtn');
+
+        // Placeholder wishlist functionality - show "coming soon" message
+        wishlistBtn.addEventListener('click', function() {
+            showToast('Wishlist feature coming soon!', 'info');
+        });
+
+        function showToast(message, type = 'success') {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+
+            // Add to document
+            document.body.appendChild(toast);
+
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 100);
+
+            // Remove after delay
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Reviews functionality
+        let currentReviewsPage = 1;
+        let currentReviewsSort = 'newest';
+        const productId = '<%= product._id %>';
+
+        function loadReviews(page = 1, sort = 'newest') {
+            const reviewsList = document.getElementById('reviewsList');
+            const reviewsPagination = document.getElementById('reviewsPagination');
+
+            // Show loading state
+            reviewsList.innerHTML = `
+                <div class="loading-reviews">
+                    <div class="spinner"></div>
+                    <p>Loading reviews...</p>
+                </div>
+            `;
+
+            fetch(`/api/products/${productId}/reviews?page=${page}&sort=${sort}&limit=5`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayReviews(data.data.reviews);
+                        displayReviewsPagination(data.data.pagination);
+                        currentReviewsPage = page;
+                        currentReviewsSort = sort;
+                    } else {
+                        reviewsList.innerHTML = '<p class="no-reviews">No reviews found.</p>';
+                        reviewsPagination.innerHTML = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading reviews:', error);
+                    reviewsList.innerHTML = '<p class="error-reviews">Error loading reviews. Please try again.</p>';
+                    reviewsPagination.innerHTML = '';
+                });
+        }
+
+        function displayReviews(reviews) {
+            const reviewsList = document.getElementById('reviewsList');
+
+            if (reviews.length === 0) {
+                reviewsList.innerHTML = '<p class="no-reviews">No reviews yet. Be the first to review this product!</p>';
+                return;
+            }
+
+            const reviewsHTML = reviews.map(review => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <span class="reviewer-name">${review.user.fullname}</span>
+                            <div class="review-rating">
+                                ${Array.from({length: 5}, (_, i) =>
+                                    `<span class="material-icons">${i < review.rating ? 'star' : 'star_outline'}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        <span class="review-date">${new Date(review.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <div class="review-content">
+                        <p>${review.comment}</p>
+                    </div>
+                    <div class="review-actions">
+                        <button class="helpful-btn" onclick="voteHelpful('${review._id}')">
+                            <span class="material-icons">thumb_up</span>
+                            Helpful (${review.helpfulVotes || 0})
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            reviewsList.innerHTML = reviewsHTML;
+        }
+
+        function displayReviewsPagination(pagination) {
+            const reviewsPagination = document.getElementById('reviewsPagination');
+
+            if (pagination.totalPages <= 1) {
+                reviewsPagination.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '<div class="pagination-container">';
+            paginationHTML += '<nav class="pagination-nav"><ul class="pagination" role="list">';
+
+            // Previous button
+            if (pagination.hasPrev) {
+                paginationHTML += `<li class="page-item">
+                    <a class="page-link" href="#" onclick="loadReviews(${pagination.currentPage - 1}, '${currentReviewsSort}'); return false;">
+                        <span class="material-icons">chevron_left</span>
+                        <span class="page-text">Previous</span>
+                    </a>
+                </li>`;
+            } else {
+                paginationHTML += `<li class="page-item disabled">
+                    <span class="page-link disabled">
+                        <span class="material-icons">chevron_left</span>
+                        <span class="page-text">Previous</span>
+                    </span>
+                </li>`;
+            }
+
+            // Page numbers
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                if (i === pagination.currentPage) {
+                    paginationHTML += `<li class="page-item active">
+                        <span class="page-link current">${i}</span>
+                    </li>`;
+                } else {
+                    paginationHTML += `<li class="page-item">
+                        <a class="page-link" href="#" onclick="loadReviews(${i}, '${currentReviewsSort}'); return false;">${i}</a>
+                    </li>`;
+                }
+            }
+
+            // Next button
+            if (pagination.hasNext) {
+                paginationHTML += `<li class="page-item">
+                    <a class="page-link" href="#" onclick="loadReviews(${pagination.currentPage + 1}, '${currentReviewsSort}'); return false;">
+                        <span class="page-text">Next</span>
+                        <span class="material-icons">chevron_right</span>
+                    </a>
+                </li>`;
+            } else {
+                paginationHTML += `<li class="page-item disabled">
+                    <span class="page-link disabled">
+                        <span class="page-text">Next</span>
+                        <span class="material-icons">chevron_right</span>
+                    </span>
+                </li>`;
+            }
+
+            paginationHTML += '</ul></nav></div>';
+            reviewsPagination.innerHTML = paginationHTML;
+        }
+
+        function voteHelpful(reviewId) {
+            fetch(`/api/reviews/${reviewId}/vote`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Thank you for your feedback!');
+                        loadReviews(currentReviewsPage, currentReviewsSort);
+                    } else {
+                        showToast(data.message || 'Error voting on review', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error voting on review:', error);
+                    showToast('Error voting on review', 'error');
+                });
+        }
+
+        // Initialize reviews
+        loadReviews();
+
+        // Handle sort change
+        document.getElementById('reviewsSort').addEventListener('change', function() {
+            loadReviews(1, this.value);
+        });
+    });
+
+    // Related Products Interactive Functions
+
+    /**
+     * Quick view functionality for related products
+     */
+    function quickView(productId) {
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.className = 'quick-view-modal';
+        modal.innerHTML = `
+            <div class="quick-view-overlay" onclick="closeQuickView()"></div>
+            <div class="quick-view-content">
+                <div class="quick-view-header">
+                    <h3>Quick View</h3>
+                    <button class="close-btn" onclick="closeQuickView()" aria-label="Close quick view">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <div class="quick-view-body">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Loading product details...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+
+        // Fetch product details
+        fetch(`/api/product/${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateQuickViewContent(data.product);
+                } else {
+                    showQuickViewError('Failed to load product details');
+                }
+            })
+            .catch(error => {
+                console.error('Quick view error:', error);
+                showQuickViewError('Error loading product details');
+            });
+    }
+
+    /**
+     * Close quick view modal
+     */
+    function closeQuickView() {
+        const modal = document.querySelector('.quick-view-modal');
+        if (modal) {
+            modal.remove();
+            document.body.style.overflow = '';
+        }
+    }
+
+    /**
+     * Update quick view content with product data
+     */
+    function updateQuickViewContent(product) {
+        const quickViewBody = document.querySelector('.quick-view-body');
+        if (!quickViewBody) return;
+
+        quickViewBody.innerHTML = `
+            <div class="quick-view-product">
+                <div class="quick-view-image">
+                    <img src="${product.mainImage}" alt="${product.name}" loading="lazy">
+                    ${product.discountPercentage > 0 ? `<span class="discount-badge">-${product.discountPercentage}%</span>` : ''}
+                </div>
+                <div class="quick-view-info">
+                    <h4 class="product-name">${product.name}</h4>
+                    <div class="product-rating">
+                        <div class="stars">
+                            ${Array.from({length: 5}, (_, i) =>
+                                `<span class="material-icons">${i < Math.floor(product.ratings.average) ? 'star' :
+                                  (i - 0.5 <= product.ratings.average ? 'star_half' : 'star_outline')}</span>`
+                            ).join('')}
+                        </div>
+                        <span class="rating-count">(${product.ratings.count} reviews)</span>
+                    </div>
+                    <div class="product-price">
+                        ${product.discountPercentage > 0 ? `<span class="original-price">₹${product.regularPrice.toFixed(2)}</span>` : ''}
+                        <span class="current-price">₹${product.salePrice.toFixed(2)}</span>
+                    </div>
+                    <p class="product-description">${product.description || 'No description available.'}</p>
+                    <div class="quick-view-actions">
+                        ${product.stock > 0 ?
+                            `<button class="btn btn-primary" onclick="addToCart('${product._id}')">
+                                <span class="material-icons">shopping_cart</span>
+                                Add to Cart
+                            </button>` :
+                            `<button class="btn btn-secondary" disabled>
+                                <span class="material-icons">inventory_2</span>
+                                Out of Stock
+                            </button>`
+                        }
+                        <a href="/product/${product._id}" class="btn btn-outline">View Full Details</a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Show error in quick view
+     */
+    function showQuickViewError(message) {
+        const quickViewBody = document.querySelector('.quick-view-body');
+        if (!quickViewBody) return;
+
+        quickViewBody.innerHTML = `
+            <div class="quick-view-error">
+                <span class="material-icons">error_outline</span>
+                <p>${message}</p>
+                <button class="btn btn-primary" onclick="closeQuickView()">Close</button>
+            </div>
+        `;
+    }
+
+    /**
+     * Placeholder wishlist function for related products
+     */
+    function toggleWishlist(productId) {
+        showToast('Wishlist feature coming soon!', 'info');
+    }
+
+    /**
+     * Add product to cart from related products
+     */
+    function addToCart(productId) {
+        const addToCartBtn = document.querySelector(`[data-product-id="${productId}"] .add-to-cart-btn`);
+
+        // Show loading state
+        if (addToCartBtn) {
+            const originalText = addToCartBtn.innerHTML;
+            addToCartBtn.innerHTML = `
+                <span class="material-icons">hourglass_empty</span>
+                <span class="btn-text">Adding...</span>
+            `;
+            addToCartBtn.disabled = true;
+        }
+
+        fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                productId: productId,
+                quantity: 1
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Product added to cart!', 'success');
+
+                // Update cart count if element exists
+                const cartCount = document.querySelector('.cart-count');
+                if (cartCount && data.cartCount) {
+                    cartCount.textContent = data.cartCount;
+                }
+            } else {
+                showToast(data.message || 'Error adding to cart', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Add to cart error:', error);
+            showToast('Error adding to cart', 'error');
+        })
+        .finally(() => {
+            // Restore button state
+            if (addToCartBtn) {
+                addToCartBtn.innerHTML = `
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="btn-text">Add to Cart</span>
+                `;
+                addToCartBtn.disabled = false;
+            }
+        });
+    }
+
+    // Initialize related products interactions
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Add keyboard navigation for related products
+        document.querySelectorAll('.related-product-card').forEach(card => {
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const link = card.querySelector('.product-title-link');
+                    if (link) {
+                        link.click();
+                    }
+                }
+            });
+        });
+
+        // Close quick view on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeQuickView();
+            }
+        });
+    });
+</script>
+
+<!-- Include pagination CSS -->
+<link rel="stylesheet" href="/css/pagination.css">

@@ -1,0 +1,286 @@
+/**
+ * Form Validation Styles
+ * Consistent styling for custom form validation across the application
+ */
+
+/* Error Message Containers */
+.field-error {
+    display: none;
+    color: #ef4444;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+    line-height: 1.4;
+    animation: slideInError 0.3s ease-out;
+}
+
+.field-error:not(:empty) {
+    display: block;
+}
+
+/* Success Message Containers */
+.field-success {
+    display: none;
+    color: #22c55e;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+    line-height: 1.4;
+    animation: slideInSuccess 0.3s ease-out;
+}
+
+.field-success:not(:empty) {
+    display: block;
+}
+
+/* Input Field States */
+.form-control.is-invalid,
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ef4444'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 4.6 1.4 1.4M7.2 4.6l-1.4 1.4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.form-control.is-valid,
+input.is-valid,
+select.is-valid,
+textarea.is-valid {
+    border-color: #22c55e !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1) !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%2322c55e'%3e%3cpath d='m3 6 2 2 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Special handling for password fields with toggle buttons */
+.form-input-group .form-control.is-invalid,
+.input-wrapper .form-control.is-invalid {
+    padding-right: 4rem; /* Account for both validation icon and password toggle */
+}
+
+.form-input-group .form-control.is-valid,
+.input-wrapper .form-control.is-valid {
+    padding-right: 4rem; /* Account for both validation icon and password toggle */
+}
+
+/* Checkbox and Radio States */
+input[type="checkbox"].is-invalid,
+input[type="radio"].is-invalid {
+    outline: 2px solid #ef4444;
+    outline-offset: 2px;
+}
+
+input[type="checkbox"].is-valid,
+input[type="radio"].is-valid {
+    outline: 2px solid #22c55e;
+    outline-offset: 2px;
+}
+
+/* File Input States */
+input[type="file"].is-invalid {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2;
+}
+
+input[type="file"].is-valid {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4;
+}
+
+/* Form Group Error State */
+.form-group.has-error .form-label,
+.form-group.has-error label {
+    color: #ef4444;
+}
+
+.form-group.has-success .form-label,
+.form-group.has-success label {
+    color: #22c55e;
+}
+
+/* Error Icons for Input Groups */
+.form-input-group.has-error .form-input-icon,
+.input-wrapper.has-error .input-icon {
+    color: #ef4444;
+}
+
+.form-input-group.has-success .form-input-icon,
+.input-wrapper.has-success .input-icon {
+    color: #22c55e;
+}
+
+/* Animations */
+@keyframes slideInError {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInSuccess {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus States for Invalid Fields */
+.form-control.is-invalid:focus,
+input.is-invalid:focus,
+select.is-invalid:focus,
+textarea.is-invalid:focus {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+.form-control.is-valid:focus,
+input.is-valid:focus,
+select.is-valid:focus,
+textarea.is-valid:focus {
+    border-color: #22c55e !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2) !important;
+}
+
+/* Admin Theme Overrides */
+.admin-page .field-error {
+    color: #dc2626;
+}
+
+.admin-page .field-success {
+    color: #16a34a;
+}
+
+.admin-page .form-control.is-invalid,
+.admin-page input.is-invalid,
+.admin-page select.is-invalid,
+.admin-page textarea.is-invalid {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+.admin-page .form-control.is-valid,
+.admin-page input.is-valid,
+.admin-page select.is-valid,
+.admin-page textarea.is-valid {
+    border-color: #16a34a !important;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1) !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .field-error,
+    .field-success {
+        font-size: 0.8125rem;
+        /* Ensure longer validation messages wrap properly on mobile */
+        word-wrap: break-word;
+        hyphens: auto;
+    }
+
+    .form-control.is-invalid,
+    .form-control.is-valid,
+    input.is-invalid,
+    input.is-valid,
+    select.is-invalid,
+    select.is-valid,
+    textarea.is-invalid,
+    textarea.is-valid {
+        background-size: 0.875rem;
+        padding-right: 2.25rem;
+    }
+
+    .form-input-group .form-control.is-invalid,
+    .form-input-group .form-control.is-valid,
+    .input-wrapper .form-control.is-invalid,
+    .input-wrapper .form-control.is-valid {
+        padding-right: 3.5rem;
+    }
+}
+
+/* Additional styles for longer validation messages */
+@media (max-width: 480px) {
+    .field-error,
+    .field-success {
+        font-size: 0.75rem;
+        line-height: 1.3;
+        margin-top: 0.375rem;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .field-error {
+        color: #b91c1c;
+        font-weight: 600;
+    }
+    
+    .field-success {
+        color: #15803d;
+        font-weight: 600;
+    }
+    
+    .form-control.is-invalid,
+    input.is-invalid,
+    select.is-invalid,
+    textarea.is-invalid {
+        border-width: 2px !important;
+        border-color: #b91c1c !important;
+    }
+    
+    .form-control.is-valid,
+    input.is-valid,
+    select.is-valid,
+    textarea.is-valid {
+        border-width: 2px !important;
+        border-color: #15803d !important;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .field-error,
+    .field-success {
+        animation: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .field-error,
+    .field-success {
+        display: none !important;
+    }
+    
+    .form-control.is-invalid,
+    .form-control.is-valid,
+    input.is-invalid,
+    input.is-valid,
+    select.is-invalid,
+    select.is-valid,
+    textarea.is-invalid,
+    textarea.is-valid {
+        border-color: #000 !important;
+        box-shadow: none !important;
+        background-image: none !important;
+        padding-right: 0.75rem !important;
+    }
+}

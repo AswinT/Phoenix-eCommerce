@@ -1,0 +1,74 @@
+/**
+ * Component: Alerts
+ * Alert and notification styles
+ */
+
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    border: 1px solid;
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+}
+
+.alert__icon {
+    flex-shrink: 0;
+    font-size: 20px;
+}
+
+.alert__content {
+    flex: 1;
+}
+
+.alert__title {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.alert__message {
+    margin: 0;
+    font-size: var(--font-size-sm);
+}
+
+.alert__close {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-base);
+}
+
+.alert__close:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.alert--success {
+    background-color: rgba(34, 197, 94, 0.1);
+    border-color: var(--color-success);
+    color: #166534;
+}
+
+.alert--error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: var(--color-error);
+    color: #991b1b;
+}
+
+.alert--warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: var(--color-warning);
+    color: #92400e;
+}
+
+.alert--info {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--color-info);
+    color: #1e40af;
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Phoenix Admin</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/admin/404.css">
+</head>
+<body>
+    <div class="admin-404-container">
+        <div class="admin-404-card">
+            <div class="admin-logo">
+                <span class="material-icons">admin_panel_settings</span>
+                Phoenix Admin
+            </div>
+            
+            <div class="error-icon">
+                <span class="material-icons">error_outline</span>
+            </div>
+            
+            <div class="error-number">404</div>
+            
+            <h1 class="error-title">Admin Page Not Found</h1>
+            
+            <p class="error-description">
+                The admin page you're looking for doesn't exist or has been moved. 
+                Let's get you back to managing your Phoenix Headphones store.
+            </p>
+            
+            <div class="admin-nav-options">
+                <a href="/admin/dashboard" class="admin-nav-card">
+                    <span class="material-icons">dashboard</span>
+                    <h4>Dashboard</h4>
+                    <p>View store overview and analytics</p>
+                </a>
+                
+                <a href="/admin/products" class="admin-nav-card">
+                    <span class="material-icons">headphones</span>
+                    <h4>Products</h4>
+                    <p>Manage your product catalog</p>
+                </a>
+                
+                <a href="/admin/categories" class="admin-nav-card">
+                    <span class="material-icons">category</span>
+                    <h4>Categories</h4>
+                    <p>Organize product categories</p>
+                </a>
+                
+                <a href="/admin/customers" class="admin-nav-card">
+                    <span class="material-icons">people</span>
+                    <h4>Customers</h4>
+                    <p>View and manage customers</p>
+                </a>
+            </div>
+            
+            <div class="admin-actions">
+                <button onclick="history.back()" class="admin-btn admin-btn-secondary">
+                    <span class="material-icons">arrow_back</span>
+                    Go Back
+                </button>
+                <a href="/admin/dashboard" class="admin-btn admin-btn-primary">
+                    <span class="material-icons">dashboard</span>
+                    Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

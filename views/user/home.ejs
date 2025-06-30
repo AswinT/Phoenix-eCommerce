@@ -1,0 +1,388 @@
+<!-- Hero Section with Video Banner -->
+<section class="hero">
+    <div class="hero-video-container">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="/video/banner.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="hero-content">
+            <h1 class="hero-title">Experience Sound Like Never Before</h1>
+            <p class="hero-subtitle">Premium Quality Headphones with Exceptional Audio Performance</p>
+            <a href="/products" class="btn btn-primary hero-cta">Shop Now</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="section featured-products">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Featured Products</h2>
+            <a href="/products" class="view-all-link">View All <span class="material-icons">arrow_forward</span></a>
+        </div>
+        
+        <div class="product-grid">
+            <% if (locals.featuredProducts && featuredProducts.length > 0) { %>
+                <% featuredProducts.forEach(function(product) { %>
+                    <div class="product-card">
+                        <div class="product-card-image">
+                            <a href="/product/<%= product._id %>">
+                                <img src="<%= product.mainImage %>" alt="<%= product.name %>" loading="lazy">
+                            </a>
+                            <% if (product.discountPercentage > 0) { %>
+                                <span class="product-discount">-<%= product.discountPercentage %>%</span>
+                            <% } %>
+                        </div>
+                        <div class="product-card-content">
+                            <h3 class="product-name">
+                                <a href="/product/<%= product._id %>"><%= product.name %></a>
+                            </h3>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <span class="material-icons">
+                                            <% if (i <= Math.floor(product.ratings.average)) { %>
+                                                star
+                                            <% } else if (i - 0.5 <= product.ratings.average) { %>
+                                                star_half
+                                            <% } else { %>
+                                                star_outline
+                                            <% } %>
+                                        </span>
+                                    <% } %>
+                                </div>
+                                <span class="rating-count">(<%= product.ratings.count %>)</span>
+                            </div>
+                            <div class="product-price">
+                                <% if (product.discountPercentage > 0) { %>
+                                    <span class="regular-price">₹<%= product.regularPrice.toFixed(2) %></span>
+                                <% } %>
+                                <span class="sale-price">₹<%= product.salePrice.toFixed(2) %></span>
+                            </div>
+                            <div class="product-card-actions">
+                                <a href="/product/<%= product._id %>" class="btn btn-primary btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="no-products">
+                    <p>No featured products available at the moment.</p>
+                    <a href="/products" class="btn btn-primary">Browse All Products</a>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Pagination for Featured Products -->
+        <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+            <div class="featured-pagination">
+                <div class="pagination-wrapper">
+                    <div class="pagination">
+                        <!-- Previous Button -->
+                        <% if (typeof hasPrevPage !== 'undefined' && hasPrevPage) { %>
+                            <button
+                                class="page-btn pagination-btn"
+                                data-page="<%= prevPage %>">
+                                <span class="material-icons">chevron_left</span>
+                            </button>
+                        <% } else { %>
+                            <button class="page-btn" disabled>
+                                <span class="material-icons">chevron_left</span>
+                            </button>
+                        <% } %>
+
+                        <!-- Page Numbers -->
+                        <% if (typeof pageNumbers !== 'undefined' && pageNumbers.length > 0) { %>
+                            <% pageNumbers.forEach(pageNum => { %>
+                                <% if (pageNum === (typeof currentPage !== 'undefined' ? currentPage : 1)) { %>
+                                    <button class="page-btn active"><%= pageNum %></button>
+                                <% } else { %>
+                                    <button
+                                        class="page-btn pagination-btn"
+                                        data-page="<%= pageNum %>">
+                                        <%= pageNum %>
+                                    </button>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
+
+                        <!-- Next Button -->
+                        <% if (typeof hasNextPage !== 'undefined' && hasNextPage) { %>
+                            <button
+                                class="page-btn pagination-btn"
+                                data-page="<%= nextPage %>">
+                                <span class="material-icons">chevron_right</span>
+                            </button>
+                        <% } else { %>
+                            <button class="page-btn" disabled>
+                                <span class="material-icons">chevron_right</span>
+                            </button>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+<!-- Collection Highlight -->
+<section class="section collection-highlight">
+    <div class="container-fluid">
+        <div class="collection-grid">
+            <%
+                // Define product category collections with local images
+                const productCollections = [
+                    {
+                        name: "Gaming Headphones",
+                        description: "Immersive audio for competitive gaming and entertainment",
+                        image: "/images/Gaming.jpg",
+                        alt: "Gaming Headphones Collection",
+                        link: "/products?category=gaming",
+                        isLarge: true
+                    },
+                    {
+                        name: "In-Ear Headphones",
+                        description: "Portable comfort with premium sound quality",
+                        image: "/images/In-Ear.jpg",
+                        alt: "In-Ear Headphones Collection",
+                        link: "/products?category=in-ear",
+                        isLarge: false
+                    },
+                    {
+                        name: "Over-Ear Headphones",
+                        description: "Professional-grade audio with superior comfort",
+                        image: "/images/Over-Ear.jpg",
+                        alt: "Over-Ear Headphones Collection",
+                        link: "/products?category=over-ear",
+                        isLarge: false
+                    }
+                ];
+            %>
+
+            <% productCollections.forEach((collection, index) => { %>
+                <div class="collection-item <%= collection.isLarge ? 'large' : '' %>">
+                    <div class="collection-content">
+                        <h3><%= collection.name %></h3>
+                        <p><%= collection.description %></p>
+                        <a href="<%= collection.link %>" class="btn btn-outline">
+                            <%= collection.isLarge ? 'Shop Collection' : 'Explore' %>
+                        </a>
+                    </div>
+                    <img src="<%= collection.image %>" alt="<%= collection.alt %>" loading="lazy">
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Phoenix -->
+<section class="section why-choose">
+    <div class="container">
+        <h2 class="section-title text-center">Why Choose Phoenix</h2>
+        
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <span class="material-icons">high_quality</span>
+                </div>
+                <h3>Premium Quality</h3>
+                <p>Expertly crafted with premium materials for exceptional durability and comfort.</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <span class="material-icons">surround_sound</span>
+                </div>
+                <h3>Superior Sound</h3>
+                <p>Advanced audio technology delivering crystal clear sound across all frequencies.</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <span class="material-icons">support_agent</span>
+                </div>
+                <h3>Expert Support</h3>
+                <p>Dedicated support team ready to assist you with any questions or issues.</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <span class="material-icons">verified</span>
+                </div>
+                <h3>Extended Warranty</h3>
+                <p>All products come with our industry-leading warranty for your peace of mind.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section testimonials">
+    <div class="container">
+        <h2 class="section-title text-center">What Our Customers Say</h2>
+        
+        <div class="testimonial-slider">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <% for (let i = 0; i < 5; i++) { %>
+                        <span class="material-icons">star</span>
+                    <% } %>
+                </div>
+                <p class="testimonial-text">"The sound quality is absolutely incredible. I can hear details in my favorite songs that I've never noticed before. Worth every penny!"</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-name">Michael T.</div>
+                    <div class="testimonial-info">Phoenix Elite Pro Owner</div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <% for (let i = 0; i < 5; i++) { %>
+                        <span class="material-icons">star</span>
+                    <% } %>
+                </div>
+                <p class="testimonial-text">"The noise cancellation is a game changer for my daily commute. I can finally enjoy my podcasts without cranking the volume in noisy environments."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-name">Sarah L.</div>
+                    <div class="testimonial-info">Phoenix Studio White Owner</div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <% for (let i = 0; i < 5; i++) { %>
+                        <span class="material-icons">star</span>
+                    <% } %>
+                </div>
+                <p class="testimonial-text">"The comfort level is outstanding. I can wear these headphones for hours of listening without any discomfort. Battery life exceeds expectations."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-name">David K.</div>
+                    <div class="testimonial-info">Phoenix Bass Boost Owner</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Subscription -->
+<section class="section newsletter">
+    <div class="container">
+        <div class="newsletter-content">
+            <h2>Stay Updated</h2>
+            <p>Subscribe to our newsletter for exclusive deals, new releases, and audio tips.</p>
+            <form class="newsletter-form-large" id="newsletterForm" novalidate data-validate>
+                <div class="form-group">
+                    <input type="email" id="newsletter-email" name="email" class="form-control" placeholder="Your email address">
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </div>
+                <div id="newsletter-email-error" class="field-error" role="alert"></div>
+                <div class="form-check">
+                    <input type="checkbox" id="newsletter-consent" name="consent" class="form-check-input">
+                    <label for="newsletter-consent" class="form-check-label">I agree to receive marketing emails from Phoenix Headphones</label>
+                </div>
+                <div id="newsletter-consent-error" class="field-error" role="alert"></div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Include home page styles -->
+<link rel="stylesheet" href="/css/user/home.css">
+
+<!-- Include pagination CSS -->
+<link rel="stylesheet" href="/css/pagination.css">
+<link rel="stylesheet" href="/css/form-validation.css">
+
+<script src="/js/form-validation.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const newsletterForm = document.getElementById('newsletterForm');
+
+        if (newsletterForm) {
+            // Initialize form validation
+            const validator = new FormValidator(newsletterForm, {
+                validateOnBlur: true,
+                validateOnInput: true,
+                showSuccessStates: false
+            });
+
+            // Setup validation rules
+            validator.setupRequiredField('email', 'Email address is required');
+            validator.setupEmailField('email', 'Please enter a valid email address');
+            validator.setupRequiredField('consent', 'You must agree to receive marketing emails');
+
+            // Form submission handling
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // Always prevent default for newsletter
+
+                if (validator.validateForm()) {
+                    // Show success message
+                    const formGroup = newsletterForm.querySelector('.form-group');
+                    formGroup.innerHTML = `
+                        <div class="newsletter-success">
+                            <span class="material-icons">check_circle</span>
+                            <p>Thank you for subscribing! You'll receive our latest updates soon.</p>
+                        </div>
+                    `;
+
+                    // Hide consent section
+                    const formCheck = newsletterForm.querySelector('.form-check');
+                    if (formCheck) formCheck.classList.add('hidden');
+
+                    // Clear error messages
+                    const errorDivs = newsletterForm.querySelectorAll('.field-error');
+                    errorDivs.forEach(div => div.classList.add('hidden'));
+                } else {
+                    validator.focusFirstError();
+                }
+            });
+        }
+
+        // Handle featured products pagination with AJAX
+        const featuredPaginationContainer = document.querySelector('.featured-pagination .pagination-wrapper');
+        const featuredProductGrid = document.querySelector('.featured-products .product-grid');
+
+        if (featuredPaginationContainer) {
+            featuredPaginationContainer.addEventListener('click', async (e) => {
+                if (e.target.closest('.pagination-btn')) {
+                    const btn = e.target.closest('.pagination-btn');
+                    const page = btn.dataset.page || 1;
+
+                    try {
+                        const url = `/?page=${page}`;
+
+                        const res = await fetch(url, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (!res.ok) throw new Error('Failed to fetch featured products');
+
+                        const html = await res.text();
+
+                        // Replace the featured products grid and pagination content
+                        const temp = document.createElement('div');
+                        temp.innerHTML = html;
+
+                        const newGrid = temp.querySelector('.featured-products .product-grid');
+                        const newPagination = temp.querySelector('.featured-pagination .pagination-wrapper');
+
+                        if (newGrid && featuredProductGrid) {
+                            featuredProductGrid.innerHTML = newGrid.innerHTML;
+                        }
+
+                        if (newPagination && featuredPaginationContainer) {
+                            featuredPaginationContainer.innerHTML = newPagination.innerHTML;
+                        }
+
+                    } catch (err) {
+                        console.error('Featured products pagination fetch error:', err);
+                    }
+                }
+            });
+        }
+    });
+</script>

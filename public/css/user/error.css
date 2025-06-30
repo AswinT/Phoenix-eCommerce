@@ -1,0 +1,59 @@
+/* Extracted inline CSS from views/user/error.ejs */
+
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 40px 20px;
+}
+
+.error-content {
+    max-width: 600px;
+    text-align: center;
+}
+
+.error-status {
+    font-size: 120px;
+    color: #cc0000;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+.error-message {
+    font-size: 24px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.error-details {
+    font-family: monospace;
+    background: #f8f8f8;
+    padding: 15px;
+    text-align: left;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin-bottom: 30px;
+}
+
+.error-actions {
+    margin-top: 30px;
+}
+
+.btn-primary {
+    background-color: #cc0000;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background-color: #aa0000;
+}

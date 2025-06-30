@@ -1,0 +1,354 @@
+/* Pagination Component Styles */
+.pagination-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md, 1rem);
+    margin: var(--spacing-xl, 2rem) 0;
+    align-items: center;
+}
+
+.pagination-info {
+    text-align: center;
+    margin-bottom: var(--spacing-sm, 0.5rem);
+}
+
+.pagination-text {
+    font-size: var(--font-size-sm, 0.875rem);
+    color: var(--color-gray-600, #6b7280);
+    font-weight: 500;
+}
+
+.pagination-nav {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: var(--spacing-xs, 0.25rem);
+    align-items: center;
+}
+
+.page-item {
+    display: flex;
+    align-items: center;
+}
+
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--color-gray-700, #374151);
+    background-color: var(--color-white, #ffffff);
+    border: 1px solid var(--color-gray-300, #d1d5db);
+    border-radius: var(--border-radius-md, 0.375rem);
+    transition: all var(--transition-normal, 0.2s ease);
+    cursor: pointer;
+    gap: var(--spacing-xs, 0.25rem);
+}
+
+.page-link:hover:not(.disabled) {
+    background-color: var(--color-gray-50, #f9fafb);
+    border-color: var(--color-gray-400, #9ca3af);
+    color: var(--color-gray-900, #111827);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-link:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    border-color: var(--color-primary, #3b82f6);
+}
+
+.page-item.active .page-link,
+.page-link.current {
+    background-color: var(--color-primary, #3b82f6);
+    border-color: var(--color-primary, #3b82f6);
+    color: var(--color-white, #ffffff);
+    font-weight: 600;
+}
+
+.page-item.active .page-link:hover,
+.page-link.current:hover {
+    background-color: var(--color-primary-dark, #2563eb);
+    border-color: var(--color-primary-dark, #2563eb);
+    transform: none;
+}
+
+.page-item.disabled .page-link,
+.page-link.disabled {
+    color: var(--color-gray-400, #9ca3af);
+    background-color: var(--color-gray-100, #f3f4f6);
+    border-color: var(--color-gray-200, #e5e7eb);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.page-item.disabled .page-link:hover,
+.page-link.disabled:hover {
+    background-color: var(--color-gray-100, #f3f4f6);
+    border-color: var(--color-gray-200, #e5e7eb);
+    color: var(--color-gray-400, #9ca3af);
+    transform: none;
+    box-shadow: none;
+}
+
+.page-item.ellipsis .page-link {
+    border: none;
+    background: none;
+    cursor: default;
+    color: var(--color-gray-500, #6b7280);
+}
+
+.page-item.ellipsis .page-link:hover {
+    background: none;
+    border: none;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Previous/Next button specific styles */
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
+    padding: var(--spacing-xs, 0.25rem) var(--spacing-md, 0.75rem);
+    min-width: auto;
+}
+
+.page-text {
+    font-weight: 500;
+}
+
+.material-icons {
+    font-size: 18px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pagination-container {
+        gap: var(--spacing-sm, 0.5rem);
+        margin: var(--spacing-lg, 1.5rem) 0;
+    }
+    
+    .pagination {
+        gap: var(--spacing-xs, 0.125rem);
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .page-link {
+        min-width: 36px;
+        height: 36px;
+        padding: var(--spacing-xs, 0.25rem);
+        font-size: var(--font-size-xs, 0.75rem);
+    }
+    
+    .page-item:first-child .page-link,
+    .page-item:last-child .page-link {
+        padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+    }
+    
+    /* Hide page text on mobile, show only icons */
+    .page-text {
+        display: none;
+    }
+    
+    .pagination-text {
+        font-size: var(--font-size-xs, 0.75rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination {
+        gap: 2px;
+    }
+    
+    .page-link {
+        min-width: 32px;
+        height: 32px;
+        padding: var(--spacing-xs, 0.25rem);
+    }
+    
+    .material-icons {
+        font-size: 16px;
+    }
+    
+    /* Show fewer page numbers on very small screens */
+    .pagination-container[data-mobile="compact"] .page-item:not(.active):not(:first-child):not(:last-child):not(.ellipsis) {
+        display: none;
+    }
+    
+    .pagination-container[data-mobile="compact"] .page-item:nth-child(2),
+    .pagination-container[data-mobile="compact"] .page-item:nth-last-child(2) {
+        display: flex;
+    }
+}
+
+/* Loading state */
+.pagination-container.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.pagination-container.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--color-gray-300, #d1d5db);
+    border-top-color: var(--color-primary, #3b82f6);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* === CUSTOM PAGINATION STYLES FOR SHOP PAGE === */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: var(--spacing-xl, 2rem) 0;
+}
+
+.pagination-wrapper .pagination {
+    display: flex;
+    gap: var(--spacing-xs, 0.25rem);
+    align-items: center;
+}
+
+.page-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: var(--spacing-sm, 0.5rem);
+    border: 1px solid var(--border-primary, #e5e7eb);
+    background-color: var(--surface-primary, #ffffff);
+    color: var(--text-primary, #374151);
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: var(--font-weight-medium, 500);
+    border-radius: var(--border-radius-md, 0.375rem);
+    cursor: pointer;
+    transition: all var(--animation-fast, 200ms) ease;
+    text-decoration: none;
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: #e03a2f;
+    color: var(--color-white, #ffffff);
+    border-color: #e03a2f;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(224, 58, 47, 0.2);
+}
+
+.page-btn:focus-visible {
+    outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #3b82f6);
+    outline-offset: var(--focus-ring-offset, 2px);
+}
+
+.page-btn.active {
+    background-color: #e03a2f;
+    color: var(--color-white, #ffffff);
+    border-color: #e03a2f;
+    cursor: default;
+}
+
+.page-btn:disabled {
+    background-color: var(--color-gray-100, #f3f4f6);
+    color: var(--color-gray-400, #9ca3af);
+    border-color: var(--color-gray-200, #e5e7eb);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.page-btn .material-icons {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pagination-wrapper .pagination {
+        gap: 2px;
+    }
+
+    .page-btn {
+        min-width: 36px;
+        height: 36px;
+        padding: var(--spacing-xs, 0.25rem);
+        font-size: var(--font-size-xs, 0.75rem);
+    }
+
+    .page-btn .material-icons {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-btn {
+        min-width: 32px;
+        height: 32px;
+        padding: var(--spacing-xs, 0.25rem);
+    }
+
+    .page-btn .material-icons {
+        font-size: 14px;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .page-link {
+        border-width: 2px;
+    }
+    
+    .page-item.active .page-link,
+    .page-link.current {
+        border-width: 3px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .page-link {
+        transition: none;
+    }
+    
+    .page-link:hover:not(.disabled) {
+        transform: none;
+    }
+    
+    .pagination-container.loading::after {
+        animation: none;
+    }
+}
+
+/* Focus visible for better keyboard navigation */
+.page-link:focus-visible {
+    outline: 2px solid var(--color-primary, #3b82f6);
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .pagination-container {
+        display: none;
+    }
+}

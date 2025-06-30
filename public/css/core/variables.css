@@ -1,0 +1,311 @@
+/**
+ * Core CSS Variables
+ * Design system tokens for Phoenix Headphones - Premium Audio Brand
+ * WCAG AA Compliant Color System
+ */
+
+:root {
+    /* === BRAND COLORS === */
+    /* Primary - Premium Audio Black */
+    --color-primary: #0a0a0a;
+    --color-primary-50: #f8f8f8;
+    --color-primary-100: #e8e8e8;
+    --color-primary-200: #d1d1d1;
+    --color-primary-300: #b4b4b4;
+    --color-primary-400: #888888;
+    --color-primary-500: #6d6d6d;
+    --color-primary-600: #5d5d5d;
+    --color-primary-700: #4f4f4f;
+    --color-primary-800: #454545;
+    --color-primary-900: #3d3d3d;
+    --color-primary-950: #0a0a0a;
+    --color-primary-dark: #000000;
+
+    /* Secondary - Premium Gold Accent */
+    --color-secondary: #d4af37;
+    --color-secondary-50: #fefce8;
+    --color-secondary-100: #fef9c3;
+    --color-secondary-200: #fef08a;
+    --color-secondary-300: #fde047;
+    --color-secondary-400: #facc15;
+    --color-secondary-500: #d4af37;
+    --color-secondary-600: #ca8a04;
+    --color-secondary-700: #a16207;
+    --color-secondary-800: #854d0e;
+    --color-secondary-900: #713f12;
+    --color-secondary-950: #422006;
+
+    /* === SEMANTIC COLORS === */
+    /* Success - WCAG AA Compliant */
+    --color-success: #059669;
+    --color-success-50: #ecfdf5;
+    --color-success-100: #d1fae5;
+    --color-success-200: #a7f3d0;
+    --color-success-300: #6ee7b7;
+    --color-success-400: #34d399;
+    --color-success-500: #10b981;
+    --color-success-600: #059669;
+    --color-success-700: #047857;
+    --color-success-800: #065f46;
+    --color-success-900: #064e3b;
+    --color-success-950: #022c22;
+
+    /* Warning - WCAG AA Compliant */
+    --color-warning: #d97706;
+    --color-warning-50: #fffbeb;
+    --color-warning-100: #fef3c7;
+    --color-warning-200: #fde68a;
+    --color-warning-300: #fcd34d;
+    --color-warning-400: #fbbf24;
+    --color-warning-500: #f59e0b;
+    --color-warning-600: #d97706;
+    --color-warning-700: #b45309;
+    --color-warning-800: #92400e;
+    --color-warning-900: #78350f;
+    --color-warning-950: #451a03;
+
+    /* Error - WCAG AA Compliant */
+    --color-error: #dc2626;
+    --color-error-50: #fef2f2;
+    --color-error-100: #fee2e2;
+    --color-error-200: #fecaca;
+    --color-error-300: #fca5a5;
+    --color-error-400: #f87171;
+    --color-error-500: #ef4444;
+    --color-error-600: #dc2626;
+    --color-error-700: #b91c1c;
+    --color-error-800: #991b1b;
+    --color-error-900: #7f1d1d;
+    --color-error-950: #450a0a;
+
+    /* Info - WCAG AA Compliant */
+    --color-info: #0369a1;
+    --color-info-50: #f0f9ff;
+    --color-info-100: #e0f2fe;
+    --color-info-200: #bae6fd;
+    --color-info-300: #7dd3fc;
+    --color-info-400: #38bdf8;
+    --color-info-500: #0ea5e9;
+    --color-info-600: #0284c7;
+    --color-info-700: #0369a1;
+    --color-info-800: #075985;
+    --color-info-900: #0c4a6e;
+    --color-info-950: #082f49;
+
+    /* === NEUTRAL COLORS === */
+    /* Premium Grayscale - WCAG AA Compliant */
+    --color-white: #ffffff;
+    --color-neutral-50: #fafafa;
+    --color-neutral-100: #f5f5f5;
+    --color-neutral-200: #e5e5e5;
+    --color-neutral-300: #d4d4d4;
+    --color-neutral-400: #a3a3a3;
+    --color-neutral-500: #737373;
+    --color-neutral-600: #525252;
+    --color-neutral-700: #404040;
+    --color-neutral-800: #262626;
+    --color-neutral-900: #171717;
+    --color-black: #000000;
+
+    /* Legacy Gray Support (for backward compatibility) */
+    --color-gray-50: var(--color-neutral-50);
+    --color-gray-100: var(--color-neutral-100);
+    --color-gray-200: var(--color-neutral-200);
+    --color-gray-300: var(--color-neutral-300);
+    --color-gray-400: var(--color-neutral-400);
+    --color-gray-500: var(--color-neutral-500);
+    --color-gray-600: var(--color-neutral-600);
+    --color-gray-700: var(--color-neutral-700);
+    --color-gray-800: var(--color-neutral-800);
+    --color-gray-900: var(--color-neutral-900);
+
+    /* === TYPOGRAPHY === */
+    /* Premium Audio Brand Typography */
+    --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-family-secondary: 'Inter', sans-serif;
+    --font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+
+    /* Font Sizes - Modular Scale */
+    --font-size-xs: 0.75rem;      /* 12px */
+    --font-size-sm: 0.875rem;     /* 14px */
+    --font-size-base: 1rem;       /* 16px */
+    --font-size-lg: 1.125rem;     /* 18px */
+    --font-size-xl: 1.25rem;      /* 20px */
+    --font-size-2xl: 1.5rem;      /* 24px */
+    --font-size-3xl: 1.875rem;    /* 30px */
+    --font-size-4xl: 2.25rem;     /* 36px */
+    --font-size-5xl: 3rem;        /* 48px */
+    --font-size-6xl: 3.75rem;     /* 60px */
+    --font-size-7xl: 4.5rem;      /* 72px */
+
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    /* Line Heights */
+    --line-height-tight: 1.25;
+    --line-height-snug: 1.375;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.625;
+    --line-height-loose: 2;
+
+    /* === SPACING === */
+    /* Consistent spacing scale */
+    --spacing-0: 0;
+    --spacing-px: 1px;
+    --spacing-0-5: 0.125rem;      /* 2px */
+    --spacing-1: 0.25rem;         /* 4px */
+    --spacing-1-5: 0.375rem;      /* 6px */
+    --spacing-2: 0.5rem;          /* 8px */
+    --spacing-2-5: 0.625rem;      /* 10px */
+    --spacing-3: 0.75rem;         /* 12px */
+    --spacing-3-5: 0.875rem;      /* 14px */
+    --spacing-4: 1rem;            /* 16px */
+    --spacing-5: 1.25rem;         /* 20px */
+    --spacing-6: 1.5rem;          /* 24px */
+    --spacing-7: 1.75rem;         /* 28px */
+    --spacing-8: 2rem;            /* 32px */
+    --spacing-9: 2.25rem;         /* 36px */
+    --spacing-10: 2.5rem;         /* 40px */
+    --spacing-11: 2.75rem;        /* 44px */
+    --spacing-12: 3rem;           /* 48px */
+    --spacing-14: 3.5rem;         /* 56px */
+    --spacing-16: 4rem;           /* 64px */
+    --spacing-20: 5rem;           /* 80px */
+    --spacing-24: 6rem;           /* 96px */
+    --spacing-28: 7rem;           /* 112px */
+    --spacing-32: 8rem;           /* 128px */
+
+    /* Legacy spacing support */
+    --spacing-xs: var(--spacing-1);
+    --spacing-sm: var(--spacing-2);
+    --spacing-md: var(--spacing-4);
+    --spacing-lg: var(--spacing-6);
+    --spacing-xl: var(--spacing-8);
+    --spacing-2xl: var(--spacing-12);
+
+    /* === BORDER RADIUS === */
+    /* Premium rounded corners */
+    --border-radius-none: 0;
+    --border-radius-sm: 0.125rem;   /* 2px */
+    --border-radius-base: 0.25rem;  /* 4px */
+    --border-radius-md: 0.375rem;   /* 6px */
+    --border-radius-lg: 0.5rem;     /* 8px */
+    --border-radius-xl: 0.75rem;    /* 12px */
+    --border-radius-2xl: 1rem;      /* 16px */
+    --border-radius-3xl: 1.5rem;    /* 24px */
+    --border-radius-full: 9999px;
+
+    /* === SHADOWS === */
+    /* Premium shadow system */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+    /* === TRANSITIONS === */
+    /* Premium motion design */
+    --transition-none: none;
+    --transition-all: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slower: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Easing curves */
+    --ease-linear: linear;
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* === Z-INDEX === */
+    /* Layering system */
+    --z-index-dropdown: 1000;
+    --z-index-sticky: 1020;
+    --z-index-fixed: 1030;
+    --z-index-modal-backdrop: 1040;
+    --z-index-modal: 1050;
+    --z-index-popover: 1060;
+    --z-index-tooltip: 1070;
+    --z-index-toast: 1080;
+
+    /* === LAYOUT === */
+    /* Container and layout tokens */
+    --container-xs: 20rem;        /* 320px */
+    --container-sm: 24rem;        /* 384px */
+    --container-md: 28rem;        /* 448px */
+    --container-lg: 32rem;        /* 512px */
+    --container-xl: 36rem;        /* 576px */
+    --container-2xl: 42rem;       /* 672px */
+    --container-3xl: 48rem;       /* 768px */
+    --container-4xl: 56rem;       /* 896px */
+    --container-5xl: 64rem;       /* 1024px */
+    --container-6xl: 72rem;       /* 1152px */
+    --container-7xl: 80rem;       /* 1280px */
+    --container-full: 100%;
+
+    /* Breakpoints */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+
+    /* Header and navigation */
+    --header-height: 4rem;        /* 64px */
+    --header-height-mobile: 3.5rem; /* 56px */
+    --sidebar-width: 16rem;       /* 256px */
+    --sidebar-width-collapsed: 4rem; /* 64px */
+
+    /* === ACCESSIBILITY === */
+    /* Focus and interaction states */
+    --focus-ring-width: 2px;
+    --focus-ring-offset: 2px;
+    --focus-ring-color: var(--color-secondary-500);
+    --focus-ring-opacity: 0.5;
+
+    /* Motion preferences */
+    --motion-safe: '';
+    --motion-reduce: '';
+}
+
+/* === ACCESSIBILITY OVERRIDES === */
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --transition-fast: none;
+        --transition-base: none;
+        --transition-slow: none;
+        --transition-slower: none;
+        --motion-reduce: 'reduce';
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --color-primary: #000000;
+        --color-secondary: #b8860b;
+        --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+        --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Dark mode color overrides can be added here */
+        /* Currently maintaining light theme for brand consistency */
+        --color-primary-dark: #000000;
+    }
+}

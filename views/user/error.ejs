@@ -1,0 +1,20 @@
+<!-- Error page for users with layout matching the Phoenix Headphones theme -->
+
+<div class="error-container">
+    <div class="error-content">
+        <div class="error-status"><%= status || 500 %></div>
+        <div class="error-message"><%= message || 'An error occurred' %></div>
+        
+        <% if (process.env.NODE_ENV === 'development' && error) { %>
+        <div class="error-details">
+            <pre><%= error %></pre>
+        </div>
+        <% } %>
+        
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">Return to Home</a>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/css/user/error.css">

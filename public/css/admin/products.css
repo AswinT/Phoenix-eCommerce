@@ -1,0 +1,22 @@
+/* Extracted inline CSS from views/admin/products.ejs */
+
+/* Logout form styling */
+.admin-nav-item form {
+    margin: 0;
+}
+
+/* Logout button styling */
+.admin-nav-item form button.admin-nav-link {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Delete modal - initially hidden */
+.delete-modal {
+    display: none;
+}

@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Admin - Add Product</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/form-validation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <link rel="stylesheet" href="/css/admin/add-product.css">
+</head>
+<body>
+    <div class="admin-sidebar">
+        <div class="admin-logo">
+            <img src="/images/phoenix-logo.png" alt="Phoenix Admin">
+            <div class="admin-brand-name">
+                <span class="phoenix">Phoenix</span>
+            </div>
+        </div>
+        <ul class="admin-nav">
+            <li class="admin-nav-item">
+                <a href="/admin/dashboard" class="admin-nav-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="/admin/products" class="admin-nav-link active">
+                    <i class="fas fa-headphones"></i> Products
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="/admin/categories" class="admin-nav-link">
+                    <i class="fas fa-list"></i> Categories
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="/admin/users" class="admin-nav-link">
+                    <i class="fas fa-users"></i> Customers
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="admin-content">
+        <div class="admin-header">
+            <div class="admin-title">
+                <a href="/admin/products" class="btn btn-link btn-icon">
+                    <span class="material-icons">arrow_back</span>
+                    <span>Back</span>
+                </a>
+                <h1>Add New Product</h1>
+            </div>
+            <div class="admin-user">
+                <div class="admin-avatar">
+                    <img src="<%= user.avatar || '/images/admin-avatar.svg' %>" alt="<%= user.fullname %>">
+                </div>
+                <div class="admin-user-info">
+                    <div class="admin-user-name"><%= user.fullname %></div>
+                    <div class="admin-user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-form">
+            <% if (error) { %>
+                <div class="alert alert-error"><%= error %></div>
+            <% } %>
+            <% if (success) { %>
+                <div class="alert alert-success"><%= success %></div>
+            <% } %>
+
+            <form action="/admin/products/add" method="POST" enctype="multipart/form-data" id="addProductForm" novalidate data-validate>
+                <!-- Basic Information Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">info</span>
+                            Basic Information
+                        </h2>
+                        <p class="form-card-description">Enter the essential details about the product.</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Product Name*</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="<%= formData.name || '' %>">
+                            <div id="name-error" class="field-error" role="alert"></div>
+                            <small>Choose a descriptive name for the product</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="brand">Brand*</label>
+                            <input type="text" class="form-control" id="brand" name="brand"
+                                value="<%= formData.brand || '' %>">
+                            <div id="brand-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Category*</label>
+                            <select class="form-control" id="category" name="category">
+                                <option value="">Select Category</option>
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category.name %>"
+                                        <%= (formData.category === category.name) ? 'selected' : '' %>>
+                                        <%= category.name %>
+                                    </option>
+                                <% }); %>
+                            </select>
+                            <div id="category-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modelNumber">Model Number*</label>
+                            <input type="text" class="form-control" id="modelNumber" name="modelNumber"
+                                value="<%= formData.modelNumber || '' %>">
+                            <div id="modelNumber-error" class="field-error" role="alert"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description*</label>
+                        <textarea class="form-control" id="description" name="description"
+                            rows="4"><%= formData.description || '' %></textarea>
+                        <div id="description-error" class="field-error" role="alert"></div>
+                        <small>Provide a detailed description of the product</small>
+                    </div>
+                </div>
+
+                <!-- Pricing & Inventory Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">payments</span>
+                            Pricing & Inventory
+                        </h2>
+                        <p class="form-card-description">Set the pricing and stock information.</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="regularPrice">Regular Price (₹)*</label>
+                            <input type="number" class="form-control" id="regularPrice" name="regularPrice"
+                                min="0" step="0.01" value="<%= formData.regularPrice || '' %>">
+                            <div id="regularPrice-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="salePrice">Sale Price (₹)*</label>
+                            <input type="number" class="form-control" id="salePrice" name="salePrice"
+                                min="0" step="0.01" value="<%= formData.salePrice || '' %>">
+                            <div id="salePrice-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stock">Stock Quantity*</label>
+                            <input type="number" class="form-control" id="stock" name="stock"
+                                min="0" value="<%= formData.stock || '0' %>">
+                            <div id="stock-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="offer">Discount Offer (%)</label>
+                            <input type="number" class="form-control" id="offer" name="offer" 
+                                min="0" max="100" value="<%= formData.offer || '0' %>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Specifications Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">settings</span>
+                            Technical Specifications
+                        </h2>
+                        <p class="form-card-description">Enter the technical details of the headphone.</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="driverSize">Driver Size*</label>
+                            <select class="form-control" id="driverSize" name="driverSize" required>
+                                <option value="">Select Driver Size</option>
+                                <option value="10mm" <%= (formData.driverSize === '10mm') ? 'selected' : '' %>>10mm</option>
+                                <option value="12mm" <%= (formData.driverSize === '12mm') ? 'selected' : '' %>>12mm</option>
+                                <option value="15mm" <%= (formData.driverSize === '15mm') ? 'selected' : '' %>>15mm</option>
+                                <option value="20mm" <%= (formData.driverSize === '20mm') ? 'selected' : '' %>>20mm</option>
+                                <option value="30mm" <%= (formData.driverSize === '30mm') ? 'selected' : '' %>>30mm</option>
+                                <option value="40mm" <%= (formData.driverSize === '40mm') ? 'selected' : '' %>>40mm</option>
+                                <option value="50mm" <%= (formData.driverSize === '50mm') ? 'selected' : '' %>>50mm</option>
+                                <option value="Custom" <%= (formData.driverSize === 'Custom') ? 'selected' : '' %>>Custom</option>
+                            </select>
+                            <div id="driverSize-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="connectivity">Connectivity*</label>
+                            <select class="form-control" id="connectivity" name="connectivity" required>
+                                <option value="">Select Connectivity</option>
+                                <option value="Wired" <%= (formData.connectivity === 'Wired') ? 'selected' : '' %>>Wired</option>
+                                <option value="Wireless" <%= (formData.connectivity === 'Wireless') ? 'selected' : '' %>>Wireless</option>
+                                <option value="Both" <%= (formData.connectivity === 'Both') ? 'selected' : '' %>>Both</option>
+                            </select>
+                            <div id="connectivity-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="color">Color*</label>
+                            <select class="form-control" id="color" name="color" required>
+                                <option value="">Select Color</option>
+                                <option value="Black" <%= (formData.color === 'Black') ? 'selected' : '' %>>Black</option>
+                                <option value="White" <%= (formData.color === 'White') ? 'selected' : '' %>>White</option>
+                                <option value="Silver" <%= (formData.color === 'Silver') ? 'selected' : '' %>>Silver</option>
+                                <option value="Gold" <%= (formData.color === 'Gold') ? 'selected' : '' %>>Gold</option>
+                                <option value="Red" <%= (formData.color === 'Red') ? 'selected' : '' %>>Red</option>
+                                <option value="Blue" <%= (formData.color === 'Blue') ? 'selected' : '' %>>Blue</option>
+                                <option value="Green" <%= (formData.color === 'Green') ? 'selected' : '' %>>Green</option>
+                                <option value="Yellow" <%= (formData.color === 'Yellow') ? 'selected' : '' %>>Yellow</option>
+                                <option value="Pink" <%= (formData.color === 'Pink') ? 'selected' : '' %>>Pink</option>
+                                <option value="Purple" <%= (formData.color === 'Purple') ? 'selected' : '' %>>Purple</option>
+                                <option value="Grey" <%= (formData.color === 'Grey') ? 'selected' : '' %>>Grey</option>
+                                <option value="Brown" <%= (formData.color === 'Brown') ? 'selected' : '' %>>Brown</option>
+                                <option value="Other" <%= (formData.color === 'Other') ? 'selected' : '' %>>Other</option>
+                            </select>
+                            <div id="color-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="warranty">Warranty</label>
+                            <input type="text" class="form-control" id="warranty" name="warranty" 
+                                value="<%= formData.warranty || '1 Year' %>">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <div class="custom-checkbox">
+                                <input type="checkbox" id="noiseCancellation" name="noiseCancellation" 
+                                    <%= (formData.noiseCancellation) ? 'checked' : '' %>>
+                                <label for="noiseCancellation">Noise Cancellation</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="custom-checkbox">
+                                <input type="checkbox" id="microphoneIncluded" name="microphoneIncluded" 
+                                    <%= (formData.microphoneIncluded !== false) ? 'checked' : '' %>>
+                                <label for="microphoneIncluded">Microphone Included</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Images Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">image</span>
+                            Product Images
+                        </h2>
+                        <p class="form-card-description">Upload and crop product images (minimum 3 required).</p>
+                    </div>
+                    
+                    <div class="image-upload-section">
+                        <input type="file" id="image-input" accept="image/*" multiple class="image-upload-input">
+                        <div class="image-gallery">
+                            <div class="selected-images" id="selected-images"></div>
+                            <div class="image-upload-card" onclick="document.getElementById('image-input').click()">
+                                <div class="upload-icon">
+                                    <span class="material-icons">add</span>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="main-image-index" name="mainImageIndex" value="0">
+                        <small class="text-muted mt-2 d-block">Click the star icon to set an image as the main product image.</small>
+                    </div>
+                </div>
+
+                <!-- Additional Information Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">more_horiz</span>
+                            Additional Information
+                        </h2>
+                        <p class="form-card-description">Add any extra details that might help customers.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tags">Tags (comma separated)</label>
+                        <input type="text" class="form-control" id="tags" name="tags" 
+                            value="<%= formData.tags ? formData.tags.join(', ') : '' %>"
+                            placeholder="e.g. wireless, premium, bass">
+                        <small>Help customers find your product with relevant tags</small>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submit-button">
+                        <span class="material-icons">add</span>
+                        Add Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Crop Modal -->
+    <div class="crop-modal" id="cropModal">
+        <div class="crop-modal-content">
+            <div class="crop-header">
+                <div class="crop-title">Crop Image</div>
+                <div class="crop-progress">Image <span id="currentImageNum">1</span> of <span id="totalImages">1</span></div>
+            </div>
+            <div class="crop-container">
+                <img id="crop-image" src="" class="crop-image">
+            </div>
+            <div class="crop-preview"></div>
+            <div class="crop-controls">
+                <button class="btn btn-secondary" id="rotate-left">
+                    <i class="fas fa-undo"></i> Rotate Left
+                </button>
+                <button class="btn btn-secondary" id="rotate-right">
+                    <i class="fas fa-redo"></i> Rotate Right
+                </button>
+                <button class="btn btn-primary" id="crop-done">
+                    <i class="fas fa-check"></i> Apply & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+
+    <script src="/js/form-validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInput = document.getElementById('image-input');
+            const cropModal = document.getElementById('cropModal');
+            const cropImage = document.getElementById('crop-image');
+            const cropPreview = document.querySelector('.crop-preview');
+            const rotateLeft = document.getElementById('rotate-left');
+            const rotateRight = document.getElementById('rotate-right');
+            const cropDone = document.getElementById('crop-done');
+            const selectedImagesContainer = document.getElementById('selected-images');
+            const submitButton = document.getElementById('submit-button');
+
+            let cropper = null;
+            let currentFiles = [];
+            let croppedImages = [];
+            let currentImageIndex = 0;
+
+            // When a cropping session is done, update the image previews
+            function finishCropping() {
+                cropModal.style.display = 'none';
+                updateImagePreviews();
+            }
+
+            // Helper function to validate image files
+            function isValidImageFile(file) {
+                // Check MIME type
+                if (!file.type.startsWith('image/')) {
+                    return false;
+                }
+                
+                // Check file extension
+                const validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+                const fileName = file.name.toLowerCase();
+                const fileExt = fileName.split('.').pop();
+                
+                return validExtensions.includes(fileExt);
+            }
+
+            // Initialize form validation
+            const form = document.getElementById('addProductForm');
+            const validator = new FormValidator(form, {
+                validateOnBlur: true,
+                validateOnInput: true,
+                showSuccessStates: false
+            });
+
+            // Set up validation rules for required fields
+            validator.setupRequiredField('name', 'Product name is required');
+            validator.setupRequiredField('brand', 'Brand is required');
+            validator.setupRequiredField('category', 'Category is required');
+            validator.setupRequiredField('modelNumber', 'Model number is required');
+            validator.setupRequiredField('description', 'Description is required');
+            validator.setupRequiredField('regularPrice', 'Regular price is required');
+            validator.setupRequiredField('salePrice', 'Sale price is required');
+            validator.setupRequiredField('stock', 'Stock quantity is required');
+            
+            // Technical specifications are required
+            validator.setupRequiredField('driverSize', 'Driver size is required');
+            validator.setupRequiredField('connectivity', 'Connectivity is required');
+            validator.setupRequiredField('color', 'Color is required');
+
+            // Set up additional validation rules
+            validator.addValidator('description', FormValidator.validators.minLength(10), 'Description must be at least 10 characters long');
+            validator.addValidator('regularPrice', FormValidator.validators.min(0.01), 'Regular price must be greater than 0');
+            validator.addValidator('salePrice', FormValidator.validators.min(0.01), 'Sale price must be greater than 0');
+            validator.addValidator('stock', FormValidator.validators.min(0), 'Stock quantity must be 0 or greater');
+
+            // Custom validator to ensure sale price is not higher than regular price
+            validator.addValidator('salePrice', function(value, form) {
+                const regularPrice = parseFloat(form.querySelector('[name="regularPrice"]').value);
+                const salePrice = parseFloat(value);
+                return !value || !regularPrice || salePrice <= regularPrice;
+            }, 'Sale price cannot be higher than regular price');
+
+            imageInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                if (!files.length) return;
+
+                // Check for invalid file types
+                const invalidFiles = files.filter(file => !isValidImageFile(file));
+                if (invalidFiles.length > 0) {
+                    Swal.fire({
+                        title: 'Unsupported File Format',
+                        text: 'Please select only image files (jpg, jpeg, png, etc.)',
+                        icon: 'error',
+                        confirmButtonColor: '#cc0000'
+                    });
+                    // Clear the input
+                    imageInput.value = '';
+                    return;
+                }
+
+                // Keep track of current files and append new ones
+                currentFiles = files;
+                // Don't reset croppedImages array to keep existing images
+                
+                // Update progress indicators
+                document.getElementById('currentImageNum').textContent = '1';
+                document.getElementById('totalImages').textContent = files.length;
+
+                // Start cropping the first image
+                currentImageIndex = 0;
+                startCropping();
+            });
+
+            function startCropping() {
+                if (currentImageIndex >= currentFiles.length) {
+                    cropModal.style.display = 'none';
+                    updateImagePreviews();
+                    return;
+                }
+
+                const file = currentFiles[currentImageIndex];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    cropImage.src = e.target.result;
+                    cropModal.style.display = 'block';
+                    
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+
+                    cropper = new Cropper(cropImage, {
+                        aspectRatio: 1,
+                        viewMode: 2,
+                        preview: cropPreview,
+                        dragMode: 'move',
+                        autoCropArea: 0.8,
+                        responsive: true,
+                        restore: false,
+                        guides: true,
+                        center: true,
+                        highlight: true,
+                        cropBoxMovable: true,
+                        cropBoxResizable: true,
+                        toggleDragModeOnDblclick: false,
+                    });
+
+                    // Update progress
+                    document.getElementById('currentImageNum').textContent = currentImageIndex + 1;
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            rotateLeft.addEventListener('click', () => {
+                if (cropper) cropper.rotate(-90);
+            });
+
+            rotateRight.addEventListener('click', () => {
+                if (cropper) cropper.rotate(90);
+            });
+
+            cropDone.addEventListener('click', () => {
+                if (!cropper) return;
+
+                const canvas = cropper.getCroppedCanvas({
+                    width: 800,
+                    height: 800,
+                    fillColor: '#fff',
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                });
+
+                canvas.toBlob((blob) => {
+                    const fileName = currentFiles[currentImageIndex].name;
+                    const croppedFile = new File([blob], fileName, { type: 'image/jpeg' });
+                    croppedImages.push(croppedFile);
+
+                    currentImageIndex++;
+                    if (currentImageIndex < currentFiles.length) {
+                        startCropping();
+                    } else {
+                        finishCropping();
+                    }
+                }, 'image/jpeg', 0.9);
+            });
+
+            function updateImagePreviews() {
+                selectedImagesContainer.innerHTML = '';
+                croppedImages.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        const mainImageIndex = parseInt(document.getElementById('main-image-index').value);
+                        div.className = `image-preview-item ${index === mainImageIndex ? 'main-image' : ''}`;
+                        div.dataset.fileIndex = index; // Add index as data attribute
+                        div.onclick = () => setMainImage(index);
+                        
+                        let innerHTML = `
+                            <img src="${e.target.result}" alt="Preview">
+                            <span class="image-number">#${index + 1}</span>
+                            <button type="button" class="remove-image" onclick="event.stopPropagation(); removeImage(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>`;
+                            
+                        if (index === mainImageIndex) {
+                            innerHTML += `
+                                <div class="main-image-star">
+                                    <i class="fas fa-star"></i>
+                                </div>`;
+                        }
+                        
+                        div.innerHTML = innerHTML;
+                        selectedImagesContainer.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+
+                // Ensure the upload card is properly positioned
+                document.querySelector('.image-upload-card').style.display = 'flex';
+            }
+
+            window.setMainImage = function(index) {
+                // Update hidden input value
+                document.getElementById('main-image-index').value = index;
+                // Refresh the preview to update the star and borders
+                updateImagePreviews();
+            };
+
+            window.removeImage = function(index) {
+                croppedImages.splice(index, 1);
+                
+                // If we removed the main image, set the first image as main
+                const mainImageIndex = parseInt(document.getElementById('main-image-index').value);
+                if (mainImageIndex === index) {
+                    document.getElementById('main-image-index').value = '0';
+                } else if (mainImageIndex > index) {
+                    // If we removed an image before the main image, update the index
+                    document.getElementById('main-image-index').value = mainImageIndex - 1;
+                }
+                
+                updateImagePreviews();
+            };
+
+            // Handle form submission
+            document.getElementById('addProductForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // First, validate all form fields
+                if (!validator.validateForm()) {
+                    // Focus on the first error field
+                    validator.focusFirstError();
+                    return;
+                }
+
+                // Then check for image requirements
+                if (croppedImages.length < 3) {
+                    Swal.fire({
+                        title: 'Warning',
+                        text: 'Please upload at least 3 product images',
+                        icon: 'warning',
+                        confirmButtonColor: '#cc0000'
+                    });
+                    return;
+                }
+
+                // Show loading state
+                const submitButton = document.getElementById('submit-button');
+                const originalButtonText = submitButton.innerHTML;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+                
+                // Add status display
+                let statusContainer = document.createElement('div');
+                statusContainer.id = 'upload-status';
+                statusContainer.style.marginTop = '10px';
+                statusContainer.style.padding = '10px';
+                statusContainer.style.backgroundColor = '#f8f9fa';
+                statusContainer.style.borderRadius = '5px';
+                statusContainer.innerHTML = '<strong>Upload Status:</strong> <span id="status-text">Preparing images...</span>';
+                submitButton.parentNode.appendChild(statusContainer);
+                
+                const updateStatus = (message) => {
+                    document.getElementById('status-text').textContent = message;
+                    console.log('Upload status:', message);
+                };
+                
+                // Create a timeout to handle cases where the request doesn't complete
+                const timeout = setTimeout(() => {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalButtonText;
+                    updateStatus('Timeout: Upload is taking too long');
+                    Swal.fire({
+                        title: 'Upload Timeout',
+                        text: 'The upload is taking too long. This could be due to connectivity issues with the image hosting service.',
+                        icon: 'error',
+                        confirmButtonColor: '#cc0000'
+                    });
+                }, 60000); // 60-second timeout
+
+                const formData = new FormData(this);
+                
+                // Remove any existing images from the form
+                formData.delete('images');
+                
+                // First upload smaller versions for validation
+                updateStatus('Optimizing images...');
+                
+                // Process images before upload to reduce their size significantly
+                const imagePromises = croppedImages.map((file, index) => {
+                    return new Promise((resolve) => {
+                        // Create a new canvas to resize the image
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Create an image to draw to canvas
+                        const img = new Image();
+                        img.onload = function() {
+                            // Calculate new dimensions (max 600x600 - smaller than before)
+                            let width = img.width;
+                            let height = img.height;
+                            const maxDimension = 600;
+                            
+                            if (width > height && width > maxDimension) {
+                                height = Math.round(height * (maxDimension / width));
+                                width = maxDimension;
+                            } else if (height > maxDimension) {
+                                width = Math.round(width * (maxDimension / height));
+                                height = maxDimension;
+                            }
+                            
+                            // Set canvas size and draw the resized image
+                            canvas.width = width;
+                            canvas.height = height;
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            // Convert to blob with reduced quality
+                            canvas.toBlob((blob) => {
+                                updateStatus(`Optimized image ${index + 1}/${croppedImages.length}`);
+                                const optimizedFile = new File([blob], file.name, { type: 'image/jpeg' });
+                                resolve(optimizedFile);
+                            }, 'image/jpeg', 0.7); // 70% quality for even smaller files
+                        };
+                        
+                        img.src = URL.createObjectURL(file);
+                    });
+                });
+                
+                Promise.all(imagePromises)
+                    .then(optimizedImages => {
+                        updateStatus('Images optimized, preparing form data...');
+                        
+                        // Add optimized images to formData
+                        optimizedImages.forEach((file, index) => {
+                            formData.append('images', file);
+                            console.log(`Adding image ${index + 1}: ${file.name}, size: ${Math.round(file.size / 1024)}KB`);
+                        });
+                        
+                        // Add main image index
+                        const mainImageIndex = document.getElementById('main-image-index').value;
+                        formData.append('mainImageIndex', mainImageIndex);
+                        
+                        updateStatus('Uploading images to server...');
+                        console.log('Starting form submission with images');
+                        
+                        // Clear timeout and set longer timeout for actual upload
+                        clearTimeout(timeout);
+                        const uploadTimeout = setTimeout(() => {
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = originalButtonText;
+                            updateStatus('Error: Upload timed out');
+                            console.error('Upload timed out');
+                            Swal.fire({
+                                title: 'Upload Failed',
+                                text: 'The upload timed out. Please try with fewer or smaller images.',
+                                icon: 'error',
+                                confirmButtonColor: '#cc0000'
+                            });
+                        }, 120000); // Extended to 2 minutes for upload
+                        
+                        // Submit the form with explicit handling of network errors
+                        return fetch('/admin/products/add', {
+                            method: 'POST',
+                            body: formData,
+                            // Important: Increase the timeout on the fetch request
+                            // Some browsers support this
+                            timeout: 120000
+                        })
+                        .then(response => {
+                            clearTimeout(uploadTimeout);
+                            if (!response.ok) {
+                                updateStatus(`Error: Server returned ${response.status}`);
+                                return response.json().then(data => {
+                                    throw new Error(data.error || `Server error: ${response.status}`);
+                                });
+                            }
+                            updateStatus('Upload complete, processing response...');
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Reset button
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = originalButtonText;
+                            
+                            if (data.success) {
+                                updateStatus('Success! Redirecting...');
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Product added successfully!',
+                                    icon: 'success',
+                                    confirmButtonColor: '#28a745'
+                                }).then(() => {
+                                    window.location.href = '/admin/products';
+                                });
+                            } else {
+                                updateStatus(`Error: ${data.error || 'Unknown error'}`);
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.error || 'Error adding product',
+                                    icon: 'error',
+                                    confirmButtonColor: '#cc0000'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            clearTimeout(uploadTimeout);
+                            // Reset button
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = originalButtonText;
+                            
+                            console.error('Error:', error);
+                            updateStatus(`Error: ${error.message || 'Network or server error'}`);
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Network or server error occurred. Please check your connection and try again.',
+                                icon: 'error',
+                                confirmButtonColor: '#cc0000'
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        clearTimeout(timeout);
+                        // Reset button
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = originalButtonText;
+                        
+                        updateStatus(`Error: ${error.message || 'Image processing failed'}`);
+                        console.error('Image processing error:', error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'There was an error processing your images. Please try again with different images.',
+                            icon: 'error',
+                            confirmButtonColor: '#cc0000'
+                        });
+                    });
+            });
+        });
+    </script>
+</body>
+</html> 

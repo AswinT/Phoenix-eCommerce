@@ -1,0 +1,27 @@
+/* Extracted inline CSS from views/admin/dashboard.ejs */
+
+/* Sidebar close button - initially hidden */
+.sidebar-close {
+    display: none;
+}
+
+/* Logout form styling */
+.admin-nav-item form {
+    margin: 0;
+}
+
+/* Logout button styling */
+.admin-nav-item form button.admin-nav-link {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Empty state table cells */
+.dashboard-empty-state {
+    text-align: center;
+}

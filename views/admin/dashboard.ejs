@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Admin - Dashboard</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <% if (typeof additionalCSS !== 'undefined' && additionalCSS) { %>
+        <% additionalCSS.forEach(function(cssPath) { %>
+            <link rel="stylesheet" href="<%= cssPath %>">
+        <% }); %>
+    <% } %>
+    <link rel="stylesheet" href="/css/admin/dashboard.css">
+    <link rel="stylesheet" href="/css/admin/dashboard-inline.css">
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="admin-sidebar">
+        <button class="sidebar-close">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="admin-logo">
+            <img src="/images/phoenix-logo.png" alt="Phoenix Admin">
+            <div class="admin-brand-name">
+                <span class="phoenix">Phoenix</span>
+            </div>
+        </div>
+        <ul class="admin-nav">
+            <li class="admin-nav-item">
+                <a href="/admin/dashboard" class="admin-nav-link <%= activePage === 'dashboard' ? 'active' : '' %>">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="/admin/products" class="admin-nav-link <%= activePage === 'products' ? 'active' : '' %>">
+                    <i class="fas fa-headphones"></i> Products
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="/admin/categories" class="admin-nav-link <%= activePage === 'categories' ? 'active' : '' %>">
+                    <i class="fas fa-list"></i> Categories
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="/admin/users" class="admin-nav-link <%= activePage === 'users' ? 'active' : '' %>">
+                    <i class="fas fa-users"></i> Customers
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <form action="/admin/logout" method="POST">
+                    <button type="submit" class="admin-nav-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="admin-content">
+        <div class="admin-header">
+            <div class="admin-title">
+                <h1>Dashboard</h1>
+            </div>
+            <div class="admin-user">
+                <div class="admin-avatar">
+                    <img src="/images/admin-avatar.svg" alt="Admin Avatar">
+                </div>
+                <div class="admin-user-info">
+                    <div class="admin-user-name"><%= user.fullname %></div>
+                    <div class="admin-user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-stats-container">
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="dashboard-stat-content">
+                    <h3>₹<%= stats.revenue.toLocaleString() %></h3>
+                    <p>Total Revenue</p>
+                </div>
+            </div>
+
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="dashboard-stat-content">
+                    <h3><%= stats.orders %></h3>
+                    <p>Total Orders</p>
+                </div>
+            </div>
+
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="dashboard-stat-content">
+                    <h3><%= stats.customers %></h3>
+                    <p>Customers</p>
+                </div>
+            </div>
+
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-icon">
+                    <i class="fas fa-headphones"></i>
+                </div>
+                <div class="dashboard-stat-content">
+                    <h3><%= stats.products %></h3>
+                    <p>Products</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-cards-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Recent Users</h2>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Date Joined</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% recentUsers.forEach(function(user) { %>
+                        <tr>
+                            <td><%= user.fullname %></td>
+                            <td><%= user.email %></td>
+                            <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+                            <td>
+                                <% if(user.isBlocked) { %>
+                                    <span class="badge badge-danger">Blocked</span>
+                                <% } else { %>
+                                    <span class="badge badge-success">Active</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                        
+                        <% if(recentUsers.length === 0) { %>
+                        <tr>
+                            <td colspan="4" class="dashboard-empty-state">No users found</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Low Stock Products</h2>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% lowStockProducts.forEach(function(product) { %>
+                        <tr>
+                            <td><%= product.name %></td>
+                            <td><%= product.category ? product.category.name : 'No Category' %></td>
+                            <td><%= product.stock %></td>
+                            <td>
+                                <% if(product.stock === 0) { %>
+                                    <span class="badge badge-danger">Out of Stock</span>
+                                <% } else if(product.stock < 5) { %>
+                                    <span class="badge badge-warning">Critical</span>
+                                <% } else { %>
+                                    <span class="badge badge-warning">Low</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                        
+                        <% if(lowStockProducts.length === 0) { %>
+                        <tr>
+                            <td colspan="4" class="dashboard-empty-state">No low stock products</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Mobile menu toggle
+            $('.mobile-menu-toggle').click(function() {
+                $('.admin-sidebar').toggleClass('active');
+                $('body').toggleClass('sidebar-open');
+            });
+
+            // Close sidebar button
+            $('.sidebar-close').click(function() {
+                $('.admin-sidebar').removeClass('active');
+                $('body').removeClass('sidebar-open');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            $(document).click(function(event) {
+                if (!$(event.target).closest('.admin-sidebar').length &&
+                    !$(event.target).closest('.mobile-menu-toggle').length &&
+                    $('.admin-sidebar').hasClass('active')) {
+                    $('.admin-sidebar').removeClass('active');
+                    $('body').removeClass('sidebar-open');
+                }
+            });
+
+            // Handle window resize
+            $(window).resize(function() {
+                if ($(window).width() > 768) {
+                    $('.admin-sidebar').removeClass('active');
+                    $('body').removeClass('sidebar-open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

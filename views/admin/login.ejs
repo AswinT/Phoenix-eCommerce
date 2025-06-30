@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Admin - Secure Login Portal</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/form-validation.css">
+    <% if (typeof additionalCSS !== 'undefined' && additionalCSS) { %>
+        <% additionalCSS.forEach(function(cssPath) { %>
+            <link rel="stylesheet" href="<%= cssPath %>">
+        <% }); %>
+    <% } %>
+    <link rel="stylesheet" href="/css/admin/login.css">
+
+
+
+
+
+
+
+</head>
+<body>
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <!-- Main Login Container -->
+    <div class="admin-login-container">
+        <!-- Header Section -->
+        <div class="login-header">
+            <div class="login-logo">
+                <img src="/images/phoenix-logo.png" alt="Phoenix Admin">
+            </div>
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Sign in to your admin dashboard</p>
+        </div>
+
+        <!-- Alert Messages -->
+        <% if (error) { %>
+            <div class="alert alert-danger" role="alert">
+                <span class="material-icons alert-icon">error_outline</span>
+                <span><%= error %></span>
+            </div>
+        <% } %>
+
+        <% if (success) { %>
+            <div class="alert alert-success" role="alert">
+                <span class="material-icons alert-icon">check_circle_outline</span>
+                <span><%= success %></span>
+            </div>
+        <% } %>
+
+        <!-- Login Form -->
+        <form action="/admin/login" method="POST" class="admin-form" id="loginForm" novalidate data-validate>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-wrapper">
+                    <span class="material-icons input-icon">email</span>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="Enter your email address"
+                        value="<%= locals.formData ? formData.email : '' %>"
+                        autocomplete="email"
+                        aria-describedby="email-error"
+                    >
+                </div>
+                <div id="email-error" class="field-error" role="alert"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="material-icons input-icon">lock</span>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        aria-describedby="password-error"
+                    >
+                    <span class="material-icons password-toggle" id="passwordToggle" title="Show/Hide Password">
+                        visibility_off
+                    </span>
+                </div>
+                <div id="password-error" class="field-error" role="alert"></div>
+            </div>
+
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember" id="remember">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-password" id="forgotPasswordLink">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-primary" id="loginButton">
+                <span class="btn-text">Sign In</span>
+                <div class="loading-spinner"></div>
+            </button>
+        </form>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            <p>&copy; 2024 Phoenix Headphones. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript for Enhanced Functionality -->
+    <script src="/js/form-validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+            const passwordToggle = document.getElementById('passwordToggle');
+            const passwordInput = document.getElementById('password');
+            const emailInput = document.getElementById('email');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+
+            // Initialize form validation
+            const validator = new FormValidator(loginForm, {
+                validateOnBlur: true,
+                validateOnInput: true,
+                showSuccessStates: false
+            });
+
+            // Setup validation rules
+            validator.setupRequiredField('email', 'Email address is required');
+            validator.setupEmailField('email', 'Please enter a valid email address');
+            validator.setupRequiredField('password', 'Password is required');
+
+            // Password visibility toggle
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+            });
+
+            // Form submission with loading state
+            loginForm.addEventListener('submit', function(e) {
+                if (validator.validateForm()) {
+                    // Show loading state
+                    loginButton.classList.add('loading');
+                    loginButton.disabled = true;
+
+                    // Add a small delay to show the loading state
+                    setTimeout(() => {
+                        // Form will submit naturally
+                    }, 100);
+                } else {
+                    e.preventDefault();
+                    validator.focusFirstError();
+                }
+            });
+
+            // Forgot password functionality
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Add SweetAlert2 to the header if not already present
+                if (!document.querySelector('link[href*="sweetalert2"]')) {
+                    const sweetAlertCSS = document.createElement('link');
+                    sweetAlertCSS.rel = 'stylesheet';
+                    sweetAlertCSS.href = 'https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css';
+                    document.head.appendChild(sweetAlertCSS);
+                    
+                    const sweetAlertJS = document.createElement('script');
+                    sweetAlertJS.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+                    document.body.appendChild(sweetAlertJS);
+                    
+                    sweetAlertJS.onload = showAlert;
+                } else {
+                    showAlert();
+                }
+                
+                function showAlert() {
+                    Swal.fire({
+                        title: 'Password Reset',
+                        text: 'Password reset functionality will be implemented soon. Please contact your system administrator.',
+                        icon: 'info',
+                        confirmButtonColor: '#cc0000'
+                    });
+                }
+            });
+
+            // Auto-focus first empty field
+            if (!emailInput.value) {
+                emailInput.focus();
+            } else if (!passwordInput.value) {
+                passwordInput.focus();
+            }
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Alt + L to focus email field
+                if (e.altKey && e.key === 'l') {
+                    e.preventDefault();
+                    emailInput.focus();
+                }
+                // Alt + P to focus password field
+                if (e.altKey && e.key === 'p') {
+                    e.preventDefault();
+                    passwordInput.focus();
+                }
+            });
+
+            // Remove loading state if there's an error (page reloaded)
+            if (document.querySelector('.alert-danger')) {
+                loginButton.classList.remove('loading');
+                loginButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html> 

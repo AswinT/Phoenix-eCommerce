@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Admin - Edit Product</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/form-validation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <link rel="stylesheet" href="/css/admin/edit-product.css">
+    <!-- SweetAlert2 for notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="admin-sidebar">
+        <div class="admin-logo">
+            <img src="/images/phoenix-logo.png" alt="Phoenix Admin">
+            <div class="admin-brand-name">
+                <span class="phoenix">Phoenix</span>
+            </div>
+        </div>
+        <ul class="admin-nav">
+            <li class="admin-nav-item">
+                <a href="/admin/dashboard" class="admin-nav-link">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="/admin/products" class="admin-nav-link active">
+                    <i class="fas fa-headphones"></i> Products
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="/admin/categories" class="admin-nav-link">
+                    <i class="fas fa-list"></i> Categories
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="/admin/users" class="admin-nav-link">
+                    <i class="fas fa-users"></i> Customers
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="admin-content">
+        <div class="admin-header">
+            <div class="admin-title">
+                <h1>Edit Product</h1>
+            </div>
+            <div class="admin-user">
+                <div class="admin-avatar">
+                    <img src="<%= user.avatar || '/images/admin-avatar.svg' %>" alt="<%= user.fullname %>">
+                </div>
+                <div class="admin-user-info">
+                    <div class="admin-user-name"><%= user.fullname %></div>
+                    <div class="admin-user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-form">
+            <% if (error) { %>
+                <div class="alert alert-error"><%= error %></div>
+            <% } %>
+            <% if (success) { %>
+                <div class="alert alert-success"><%= success %></div>
+            <% } %>
+
+            <form action="/admin/products/edit/<%= product._id %>" method="POST" enctype="multipart/form-data">
+                <!-- Basic Information Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">info</span>
+                            Basic Information
+                        </h2>
+                        <p class="form-card-description">Edit the essential details about the product.</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Product Name*</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="<%= product.name %>" required>
+                            <div id="name-error" class="field-error" role="alert"></div>
+                            <small>Choose a descriptive name for the product</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="brand">Brand*</label>
+                            <input type="text" class="form-control" id="brand" name="brand"
+                                value="<%= product.brand %>" required>
+                            <div id="brand-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Category*</label>
+                            <select class="form-control" id="category" name="category" required>
+                                <option value="">Select Category</option>
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category.name %>"
+                                        <%= (product.category === category.name) ? 'selected' : '' %>>
+                                        <%= category.name %>
+                                    </option>
+                                <% }); %>
+                            </select>
+                            <div id="category-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modelNumber">Model Number*</label>
+                            <input type="text" class="form-control" id="modelNumber" name="modelNumber"
+                                value="<%= product.modelNumber %>" required>
+                            <div id="modelNumber-error" class="field-error" role="alert"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description*</label>
+                        <textarea class="form-control" id="description" name="description"
+                            rows="4" required><%= product.description %></textarea>
+                        <div id="description-error" class="field-error" role="alert"></div>
+                        <small>Provide a detailed description of the product</small>
+                    </div>
+                </div>
+
+                <!-- Pricing & Inventory Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">payments</span>
+                            Pricing & Inventory
+                        </h2>
+                        <p class="form-card-description">Update the pricing and stock information.</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="regularPrice">Regular Price (₹)*</label>
+                            <input type="number" class="form-control" id="regularPrice" name="regularPrice"
+                                min="0" step="0.01" value="<%= product.regularPrice %>" required>
+                            <div id="regularPrice-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="salePrice">Sale Price (₹)*</label>
+                            <input type="number" class="form-control" id="salePrice" name="salePrice"
+                                min="0" step="0.01" value="<%= product.salePrice %>" required>
+                            <div id="salePrice-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stock">Stock Quantity*</label>
+                            <input type="number" class="form-control" id="stock" name="stock"
+                                min="0" value="<%= product.stock %>" required>
+                            <div id="stock-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="offer">Discount Offer (%)</label>
+                            <input type="number" class="form-control" id="offer" name="offer" 
+                                min="0" max="100" value="<%= product.offer || '0' %>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Specifications Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">settings</span>
+                            Technical Specifications
+                        </h2>
+                        <p class="form-card-description">Update the technical details of the headphone.</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="driverSize">Driver Size*</label>
+                            <select class="form-control" id="driverSize" name="driverSize" required>
+                                <option value="">Select Driver Size</option>
+                                <option value="10mm" <%= (product.driverSize === '10mm') ? 'selected' : '' %>>10mm</option>
+                                <option value="12mm" <%= (product.driverSize === '12mm') ? 'selected' : '' %>>12mm</option>
+                                <option value="15mm" <%= (product.driverSize === '15mm') ? 'selected' : '' %>>15mm</option>
+                                <option value="20mm" <%= (product.driverSize === '20mm') ? 'selected' : '' %>>20mm</option>
+                                <option value="30mm" <%= (product.driverSize === '30mm') ? 'selected' : '' %>>30mm</option>
+                                <option value="40mm" <%= (product.driverSize === '40mm') ? 'selected' : '' %>>40mm</option>
+                                <option value="50mm" <%= (product.driverSize === '50mm') ? 'selected' : '' %>>50mm</option>
+                                <option value="Custom" <%= (product.driverSize === 'Custom') ? 'selected' : '' %>>Custom</option>
+                                <%
+                                // Add current value as option if it doesn't match any of the above
+                                const standardSizes = ['10mm', '12mm', '15mm', '20mm', '30mm', '40mm', '50mm', 'Custom'];
+                                if (product.driverSize && !standardSizes.includes(product.driverSize)) { %>
+                                    <option value="<%= product.driverSize %>" selected><%= product.driverSize %> (Current)</option>
+                                <% } %>
+                            </select>
+                            <div id="driverSize-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="connectivity">Connectivity*</label>
+                            <select class="form-control" id="connectivity" name="connectivity" required>
+                                <option value="">Select Connectivity</option>
+                                <option value="Wired" <%= (product.connectivity === 'Wired') ? 'selected' : '' %>>Wired</option>
+                                <option value="Wireless" <%= (product.connectivity === 'Wireless') ? 'selected' : '' %>>Wireless</option>
+                                <option value="Both" <%= (product.connectivity === 'Both') ? 'selected' : '' %>>Both</option>
+                            </select>
+                            <div id="connectivity-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="color">Color*</label>
+                            <select class="form-control" id="color" name="color" required>
+                                <option value="">Select Color</option>
+                                <option value="Black" <%= (product.color === 'Black') ? 'selected' : '' %>>Black</option>
+                                <option value="White" <%= (product.color === 'White') ? 'selected' : '' %>>White</option>
+                                <option value="Silver" <%= (product.color === 'Silver') ? 'selected' : '' %>>Silver</option>
+                                <option value="Gold" <%= (product.color === 'Gold') ? 'selected' : '' %>>Gold</option>
+                                <option value="Red" <%= (product.color === 'Red') ? 'selected' : '' %>>Red</option>
+                                <option value="Blue" <%= (product.color === 'Blue') ? 'selected' : '' %>>Blue</option>
+                                <option value="Green" <%= (product.color === 'Green') ? 'selected' : '' %>>Green</option>
+                                <option value="Yellow" <%= (product.color === 'Yellow') ? 'selected' : '' %>>Yellow</option>
+                                <option value="Pink" <%= (product.color === 'Pink') ? 'selected' : '' %>>Pink</option>
+                                <option value="Purple" <%= (product.color === 'Purple') ? 'selected' : '' %>>Purple</option>
+                                <option value="Grey" <%= (product.color === 'Grey') ? 'selected' : '' %>>Grey</option>
+                                <option value="Brown" <%= (product.color === 'Brown') ? 'selected' : '' %>>Brown</option>
+                                <option value="Other" <%= (product.color === 'Other') ? 'selected' : '' %>>Other</option>
+                                <%
+                                // Add current value as option if it doesn't match any of the above
+                                const standardColors = ['Black', 'White', 'Silver', 'Gold', 'Red', 'Blue', 'Green', 'Yellow', 'Pink', 'Purple', 'Grey', 'Brown', 'Other'];
+                                if (product.color && !standardColors.includes(product.color)) { %>
+                                    <option value="<%= product.color %>" selected><%= product.color %> (Current)</option>
+                                <% } %>
+                            </select>
+                            <div id="color-error" class="field-error" role="alert"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="warranty">Warranty</label>
+                            <input type="text" class="form-control" id="warranty" name="warranty" 
+                                value="<%= product.warranty || '1 Year' %>">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <div class="custom-checkbox">
+                                <input type="checkbox" id="noiseCancellation" name="noiseCancellation" 
+                                    <%= product.noiseCancellation ? 'checked' : '' %>>
+                                <label for="noiseCancellation">Noise Cancellation</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="custom-checkbox">
+                                <input type="checkbox" id="microphoneIncluded" name="microphoneIncluded" 
+                                    <%= product.microphoneIncluded ? 'checked' : '' %>>
+                                <label for="microphoneIncluded">Microphone Included</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Images Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">image</span>
+                            Product Images
+                        </h2>
+                        <p class="form-card-description">Manage product images. At least 3 images are required.</p>
+                        <div class="alert alert-info" style="margin-top: 10px; padding: 10px; background-color: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px; color: #0c5460;">
+                            <strong>Note:</strong> All uploaded images must be cropped before saving. The cropping process is mandatory and cannot be skipped.
+                        </div>
+                    </div>
+                    
+                    <div class="image-gallery">
+                        <!-- Existing Images -->
+                        <% product.images.forEach((image, index) => { %>
+                            <div class="image-preview-item">
+                                <img src="<%= image.url %>" alt="Product Image">
+                                <div class="image-preview-actions">
+                                    <input type="hidden" name="existingImages" value="<%= image.url %>">
+                                    <input type="hidden" name="isMainImage" value="<%= image.isMain %>">
+                                    <button type="button" onclick="setMainImage(this)" title="Set as Main" 
+                                        class="<%= image.isMain ? 'active' : '' %>">
+                                        <span class="material-icons">star</span>
+                                    </button>
+                                    <button type="button" onclick="removeExistingImage(this)" title="Remove">
+                                        <span class="material-icons">close</span>
+                                    </button>
+                                </div>
+                            </div>
+                        <% }); %>
+                        
+                        <!-- New Images Preview -->
+                        <div id="newImagePreview"></div>
+                        
+                        <!-- Upload New Images Button -->
+                        <div class="image-upload-card" onclick="document.getElementById('newImages').click()">
+                            <div class="upload-icon">
+                                <span class="material-icons">add</span>
+                            </div>
+                        </div>
+                        
+                        <input type="file" id="newImages" name="newImages" accept="image/*" multiple
+                            class="new-images-input" onchange="previewNewImages(this)">
+                        <input type="hidden" id="main-image-index" name="mainImageIndex" value="0">
+                    </div>
+                </div>
+
+                <!-- Additional Information Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="form-card-title">
+                            <span class="material-icons">more_horiz</span>
+                            Additional Information
+                        </h2>
+                        <p class="form-card-description">Update any extra details that might help customers.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tags">Tags (comma separated)</label>
+                        <input type="text" class="form-control" id="tags" name="tags" 
+                            value="<%= product.tags ? product.tags.join(', ') : '' %>"
+                            placeholder="e.g. wireless, premium, bass">
+                        <small>Help customers find your product with relevant tags</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="history.back()">
+                        <span class="material-icons">arrow_back</span>
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="material-icons">save</span>
+                        Update Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Crop Modal -->
+    <div id="cropModal" class="crop-modal">
+        <div class="crop-modal-content">
+            <!-- Removed close button to make cropping mandatory -->
+            <div class="crop-header">
+                <h3>Crop Image (Required)</h3>
+                <p class="crop-instruction">Please crop this image before proceeding. This step is mandatory.</p>
+            </div>
+            <div class="crop-progress">
+                <span id="cropProgressText">Image 1 of 1</span>
+                <div class="crop-progress-bar">
+                    <div id="cropProgressBarFill" class="crop-progress-bar-fill"></div>
+                </div>
+            </div>
+            <div class="crop-container">
+                <img id="cropImage" src="" alt="Image to crop">
+            </div>
+            <div class="crop-controls">
+                <button class="btn btn-primary" id="cropButton">
+                    <i class="fas fa-crop"></i> Crop & Continue
+                </button>
+                <p class="crop-help-text" style="margin-top: 10px; font-size: 12px; color: #6c757d;">
+                    Drag to move the image, use corners to resize the crop area. Click "Crop & Continue" when ready.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="/js/form-validation.js"></script>
+    
+    <script>
+        let cropper = null;
+        let currentFileInput = null;
+        let currentFileIndex = null;
+        let imagesToProcess = [];
+        const processedFiles = new Map();
+        let existingImages = [];
+
+        // Global variables to track uploaded files
+        let uploadedFiles = [];
+        
+        // Function to add files to our global tracker
+        function addToUploadedFiles(files) {
+            // Convert FileList to array and add to our tracked array
+            Array.from(files).forEach(file => {
+                // Check if file already exists by name (simplified approach)
+                const fileExists = uploadedFiles.some(f => f.name === file.name);
+                if (!fileExists) {
+                    uploadedFiles.push(file);
+                }
+            });
+        }
+        
+        // Function to rebuild FileList from our tracked files
+        function rebuildFileInput(input) {
+            if (uploadedFiles.length === 0) return;
+            
+            const dt = new DataTransfer();
+            uploadedFiles.forEach(file => {
+                dt.items.add(file);
+            });
+            input.files = dt.files;
+        }
+
+        // Initialize existing images and form validation
+        $(document).ready(function() {
+            existingImages = Array.from(document.querySelectorAll('.image-preview-wrapper')).map(wrapper => {
+                const img = wrapper.querySelector('.image-preview');
+                return {
+                    src: img.src,
+                    isMain: wrapper.querySelector('.btn-make-main').classList.contains('active')
+                };
+            });
+
+            // Initialize form validation (same as add product)
+            const form = document.querySelector('form');
+            const validator = new FormValidator(form, {
+                validateOnBlur: true,
+                validateOnInput: false, // Less aggressive for edit form
+                showSuccessStates: false
+            });
+
+            // Set up validation rules for required fields
+            validator.setupRequiredField('name', 'Product name is required');
+            validator.setupRequiredField('brand', 'Brand is required');
+            validator.setupRequiredField('category', 'Category is required');
+            validator.setupRequiredField('modelNumber', 'Model number is required');
+            validator.setupRequiredField('description', 'Description is required');
+            validator.setupRequiredField('regularPrice', 'Regular price is required');
+            validator.setupRequiredField('salePrice', 'Sale price is required');
+            validator.setupRequiredField('stock', 'Stock quantity is required');
+
+            // Technical specifications - only validate if empty (more lenient for edit)
+            validator.addValidator('driverSize', function(value) {
+                return value && value.trim() !== '';
+            }, 'Driver size is required');
+
+            validator.addValidator('connectivity', function(value) {
+                return value && value.trim() !== '';
+            }, 'Connectivity is required');
+
+            validator.addValidator('color', function(value) {
+                return value && value.trim() !== '';
+            }, 'Color is required');
+
+            // Set up additional validation rules
+            validator.addValidator('description', FormValidator.validators.minLength(10), 'Description must be at least 10 characters long');
+            validator.addValidator('regularPrice', FormValidator.validators.min(0.01), 'Regular price must be greater than 0');
+            validator.addValidator('salePrice', FormValidator.validators.min(0.01), 'Sale price must be greater than 0');
+            validator.addValidator('stock', FormValidator.validators.min(0), 'Stock quantity must be 0 or greater');
+
+            // Custom validator to ensure sale price is not higher than regular price
+            validator.addValidator('salePrice', function(value, form) {
+                const regularPrice = parseFloat(form.querySelector('[name="regularPrice"]').value);
+                const salePrice = parseFloat(value);
+                return !value || !regularPrice || salePrice <= regularPrice;
+            }, 'Sale price cannot be higher than regular price');
+
+            // Store validator globally for form submission
+            window.editProductValidator = validator;
+
+            // Debug: Log current field values
+            console.log('Edit Product Form Initialized:');
+            console.log('Driver Size:', document.getElementById('driverSize').value);
+            console.log('Connectivity:', document.getElementById('connectivity').value);
+            console.log('Color:', document.getElementById('color').value);
+        });
+
+        // File input handling
+        $('.custom-file-input').on('change', function(e) {
+            const files = Array.from(this.files);
+            if (files.length === 0) return;
+
+            currentFileInput = this;
+            imagesToProcess = files.filter(file => !processedFiles.has(file.name));
+
+            if (imagesToProcess.length > 0) {
+                // Show info message about mandatory cropping
+                Swal.fire({
+                    title: 'Image Cropping Required',
+                    text: `You have selected ${imagesToProcess.length} image(s). Each image must be cropped before you can save the product. The cropping process will start now.`,
+                    icon: 'info',
+                    confirmButtonColor: '#cc0000',
+                    confirmButtonText: 'Start Cropping'
+                }).then(() => {
+                    currentFileIndex = 0;
+                    startCropping();
+                });
+            }
+
+            // Update file input label
+            const fileCount = files.length;
+            $(this).next('.custom-file-label').html(fileCount > 1 ? `${fileCount} files selected` : files[0].name);
+        });
+
+        function startCropping() {
+            if (currentFileIndex >= imagesToProcess.length) {
+                $('#cropModal').css('display', 'none');
+                return;
+            }
+
+            const file = imagesToProcess[currentFileIndex];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                // Show crop modal
+                $('#cropModal').css('display', 'block');
+                const cropImage = document.getElementById('cropImage');
+                cropImage.src = e.target.result;
+
+                // Update progress
+                updateCropProgress();
+                
+                // Initialize cropper
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: 1,
+                    viewMode: 2,
+                    dragMode: 'move',
+                    autoCropArea: 0.8,
+                    restore: false,
+                    guides: true,
+                    center: true,
+                    highlight: true,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: false,
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateCropProgress() {
+            const current = currentFileIndex + 1;
+            const total = imagesToProcess.length;
+            const percentage = (current / total) * 100;
+            
+            $('#cropProgressText').text(`Image ${current} of ${total}`);
+            $('#cropProgressBarFill').css('width', `${percentage}%`);
+        }
+
+        // Crop button click handler
+        $('#cropButton').click(function() {
+            if (!cropper) return;
+
+            // Get cropped canvas
+            const canvas = cropper.getCroppedCanvas({
+                width: 800,
+                height: 800,
+                fillColor: '#fff',
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+
+            // Convert canvas to blob
+            canvas.toBlob((blob) => {
+                const file = imagesToProcess[currentFileIndex];
+                const croppedFile = new File([blob], file.name, { type: file.type });
+                processedFiles.set(file.name, croppedFile);
+
+                // Add preview
+                const container = $('#newImagePreviewContainer');
+                const totalImages = container.children('.image-preview-wrapper').length;
+                const previewHtml = `
+                    <div class="image-preview-wrapper">
+                        <img src="${canvas.toDataURL()}" class="image-preview" alt="Preview">
+                        <div class="image-preview-controls">
+                            <button type="button" class="btn-make-main ${totalImages === 0 && existingImages.length === 0 ? 'active' : ''}" data-index="${totalImages}" title="Make main image">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button type="button" class="btn-remove-image" data-index="${totalImages}" title="Remove image">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.append(previewHtml);
+
+                // Move to next image
+                currentFileIndex++;
+                if (currentFileIndex < imagesToProcess.length) {
+                    startCropping();
+                } else {
+                    // Close modal when all images are processed
+                    $('#cropModal').css('display', 'none');
+                    cropper.destroy();
+                    cropper = null;
+                }
+            }, 'image/jpeg', 0.9);
+        });
+
+        // Removed close modal handler to make cropping mandatory
+        // Users must complete cropping for all selected images
+
+        // Handle existing images main image selection
+        $(document).on('click', '.btn-make-main', function() {
+            const clickedIndex = $(this).data('image-id');
+            const container = $('#currentImagesContainer');
+            
+            // Remove active class from all star buttons
+            container.find('.btn-make-main').removeClass('active');
+            
+            // Add active class to clicked star button
+            $(this).addClass('active');
+
+            // Update hidden inputs for main image
+            container.find('input[name="isMainImage[]"]').val('false');
+            $(this).closest('.image-preview-wrapper').find('input[name="isMainImage[]"]').val('true');
+        });
+
+        // Handle existing image removal
+        $(document).on('click', '#currentImagesContainer .btn-remove-image', function() {
+            const wrapper = $(this).closest('.image-preview-wrapper');
+            const wasMain = wrapper.find('.btn-make-main.active').length > 0;
+            
+            // Remove the image preview
+            wrapper.remove();
+            
+            // If this was the main image, make the first remaining image the main one
+            if (wasMain) {
+                const firstImage = $('#currentImagesContainer .image-preview-wrapper').first();
+                if (firstImage.length) {
+                    firstImage.find('.btn-make-main').addClass('active');
+                    firstImage.find('input[name="isMainImage[]"]').val('true');
+                }
+            }
+
+            // If no images left, show the "No images available" message
+            if ($('#currentImagesContainer .image-preview-wrapper').length === 0) {
+                $('.current-images').html('<p class="text-muted">No images available</p>');
+            }
+        });
+
+        // Handle new image removal
+        $(document).on('click', '#newImagePreviewContainer .btn-remove-image', function() {
+            const clickedIndex = $(this).data('index');
+            const wrapper = $(this).closest('.image-preview-wrapper');
+            
+            // Remove the image preview
+            wrapper.remove();
+            
+            // Remove from processed files
+            const files = Array.from(processedFiles.values());
+            processedFiles.delete(files[clickedIndex].name);
+            
+            // Update the files in the input
+            const fileArray = new DataTransfer();
+            files.forEach((file, index) => {
+                if (index !== clickedIndex) {
+                    fileArray.items.add(file);
+                }
+            });
+            
+            currentFileInput.files = fileArray.files;
+            
+            // Update the label
+            const fileCount = fileArray.files.length;
+            $('.custom-file-label').html(fileCount > 1 ? `${fileCount} new files selected` : (fileCount === 1 ? fileArray.files[0].name : 'Choose new images'));
+        });
+
+        // Handle form submission (updated to match add product pattern)
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+
+            // First, validate all form fields (same as add product)
+            if (window.editProductValidator && !window.editProductValidator.validateForm()) {
+                // Focus on the first error field
+                window.editProductValidator.focusFirstError();
+                return;
+            }
+
+            // Check if there are images selected but not yet cropped (mandatory cropping validation)
+            if (imagesToProcess.length > 0) {
+                Swal.fire({
+                    title: 'Images Not Cropped',
+                    text: 'You have selected images that have not been cropped yet. Please complete the cropping process for all selected images before submitting.',
+                    icon: 'warning',
+                    confirmButtonColor: '#cc0000',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Show loading state
+            const submitButton = $('button[type="submit"]');
+            const originalButtonText = submitButton.html();
+            submitButton.prop('disabled', true);
+            submitButton.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...');
+
+            // Add status display
+            let statusContainer = $('<div id="upload-status" style="margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;"><strong>Update Status:</strong> <span id="status-text">Preparing update...</span></div>');
+            submitButton.parent().append(statusContainer);
+
+            const updateStatus = (message) => {
+                $('#status-text').text(message);
+                console.log('Update status:', message);
+            };
+
+            // Create FormData from the form
+            const formData = new FormData(this);
+
+            // Add processed files to the form data
+            if (processedFiles.size > 0) {
+                formData.delete('newImages'); // Remove existing files
+                processedFiles.forEach(file => {
+                    formData.append('images', file);
+                });
+            } else if (uploadedFiles.length > 0) {
+                formData.delete('newImages'); // Remove existing files
+                uploadedFiles.forEach(file => {
+                    formData.append('images', file);
+                });
+            }
+
+            updateStatus('Updating product...');
+
+            // Submit the form with AJAX (same pattern as add product)
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    updateStatus(`Error: Server returned ${response.status}`);
+                    return response.json().then(data => {
+                        throw new Error(data.error || `Server error: ${response.status}`);
+                    });
+                }
+                updateStatus('Update complete, processing response...');
+                return response.json();
+            })
+            .then(data => {
+                // Reset button
+                submitButton.prop('disabled', false);
+                submitButton.html(originalButtonText);
+                $('#upload-status').remove();
+
+                if (data.success) {
+                    updateStatus('Success! Redirecting...');
+                    Swal.fire({
+                        title: 'Success!',
+                        text: data.message || 'Product updated successfully',
+                        icon: 'success',
+                        confirmButtonColor: '#28a745'
+                    }).then(() => {
+                        window.location.href = '/admin/products';
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.error || 'Failed to update product',
+                        icon: 'error',
+                        confirmButtonColor: '#cc0000'
+                    });
+                }
+            })
+            .catch(error => {
+                // Reset button
+                submitButton.prop('disabled', false);
+                submitButton.html(originalButtonText);
+                $('#upload-status').remove();
+
+                console.error('Error:', error);
+                updateStatus(`Error: ${error.message || 'Network or server error'}`);
+                Swal.fire({
+                    title: 'Error',
+                    text: error.message || 'Network or server error occurred. Please check your connection and try again.',
+                    icon: 'error',
+                    confirmButtonColor: '#cc0000'
+                });
+            });
+        });
+
+        function previewNewImages(input) {
+            const preview = document.getElementById('newImagePreview');
+            
+            if (input.files && input.files.length > 0) {
+                // Add new files to our global tracker
+                addToUploadedFiles(input.files);
+                
+                // Clear preview and rebuild from tracked files
+                preview.innerHTML = '';
+                
+                // Display all tracked files
+                uploadedFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'image-preview-item';
+                        div.dataset.fileIndex = index;
+                        
+                        div.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview">
+                            <div class="image-preview-actions">
+                                <button type="button" onclick="setMainImage(this)" title="Set as Main">
+                                    <span class="material-icons">star</span>
+                                </button>
+                                <button type="button" onclick="removeNewImage('${file.name}', this)" title="Remove">
+                                    <span class="material-icons">close</span>
+                                </button>
+                            </div>
+                            <input type="hidden" name="isMainImage" value="false">
+                        `;
+                        
+                        preview.appendChild(div);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                });
+                
+                // Update the input field with all files
+                rebuildFileInput(input);
+            }
+        }
+
+        function removeNewImage(filename, button) {
+            // Remove the preview element
+            const item = button.closest('.image-preview-item');
+            const wasMain = item.querySelector('button[title="Set as Main"]').classList.contains('active');
+            item.remove();
+            
+            // Remove file from our global tracker
+            uploadedFiles = uploadedFiles.filter(file => file.name !== filename);
+            
+            // Update the file input
+            const input = document.getElementById('newImages');
+            rebuildFileInput(input);
+            
+            // If it was a main image, select another one
+            if (wasMain) {
+                const firstItem = document.querySelector('.image-preview-item');
+                if (firstItem) {
+                    setMainImage(firstItem.querySelector('button[title="Set as Main"]'));
+                }
+            }
+        }
+
+        function removeExistingImage(button) {
+            const item = button.closest('.image-preview-item');
+            const wasMain = item.querySelector('button[title="Set as Main"]').classList.contains('active');
+            item.remove();
+            
+            // If it was the main image, set another as main
+            if (wasMain) {
+                const firstItem = document.querySelector('.image-preview-item');
+                if (firstItem) {
+                    setMainImage(firstItem.querySelector('button[title="Set as Main"]'));
+                }
+            }
+        }
+
+        function setMainImage(button) {
+            // Remove active class from all star buttons
+            document.querySelectorAll('button[title="Set as Main"]')
+                .forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Update all isMainImage hidden inputs to false except the selected one
+            document.querySelectorAll('input[name="isMainImage"]').forEach(input => input.value = 'false');
+            
+            // Set the selected one to true
+            button.closest('.image-preview-item')
+                .querySelector('input[name="isMainImage"]').value = 'true';
+        }
+    </script>
+</body>
+</html> 

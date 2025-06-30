@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Headphones | <%= typeof title !== 'undefined' ? title : 'Premium Audio Experience' %></title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phoenix Design System CSS -->
+    <link rel="stylesheet" href="/css/core/variables.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/components/buttons.css">
+    <link rel="stylesheet" href="/css/components/forms.css">
+    <link rel="stylesheet" href="/css/components/animations.css">
+    <link rel="stylesheet" href="/css/form-validation.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if (typeof additionalCSS !== 'undefined') { %>
+        <% additionalCSS.forEach(function(cssPath) { %>
+            <link rel="stylesheet" href="<%= cssPath %>">
+        <% }); %>
+    <% } %>
+</head>
+<body>
+    <!-- Header -->
+    <%- include('partials/header') %>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <%- body %>
+    </main>
+
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+
+    <!-- Core JS -->
+    <script src="/js/main.js"></script>
+    <% if (typeof additionalJS !== 'undefined') { %>
+        <% additionalJS.forEach(function(jsPath) { %>
+            <script src="<%= jsPath %>"></script>
+        <% }); %>
+    <% } %>
+</body>
+</html> 

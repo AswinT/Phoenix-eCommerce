@@ -1,0 +1,426 @@
+<div class="products-page">
+    <!-- Filter Toggle Button -->
+    <button class="filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="filterSidebar">
+        <span class="material-icons">filter_list</span>
+        <span>Filters</span>
+    </button>
+
+    <!-- Filter Sidebar Overlay -->
+    <div class="filter-sidebar-overlay" id="filterOverlay" aria-hidden="true"></div>
+
+    <div class="products-layout">
+        <!-- Filter Sidebar -->
+        <aside class="filter-sidebar" id="filterSidebar" role="dialog" aria-modal="false" aria-labelledby="filterTitle" aria-hidden="true">
+            <div class="filter-header">
+                <h2 id="filterTitle">Filters</h2>
+                <button class="filter-close" id="filterClose" aria-label="Close filters">
+                    <span class="material-icons" aria-hidden="true">close</span>
+                </button>
+            </div>
+
+            <form action="/products" method="GET" id="filter-form" class="filter-form">
+                <!-- Categories Filter -->
+                <div class="filter-section">
+                    <h3 class="filter-title">Category</h3>
+                    <div class="filter-dropdown">
+                        <select name="category" class="form-select">
+                            <option value="">All Categories</option>
+                            <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                                <% categories.forEach(function(category) { %>
+                                    <option value="<%= category._id %>" 
+                                        <%= (categoryFilter === category._id.toString()) ? 'selected' : '' %>>
+                                        <%= category.name %> (<%= category.productCount %>)
+                                    </option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Price Range Filter -->
+                <div class="filter-section">
+                    <h3 class="filter-title">Price Range</h3>
+                    <div class="price-range">
+                        <div class="price-inputs">
+                            <div class="price-input-group">
+                                <input type="number" id="minPrice" name="minPrice" 
+                                    value="<%= typeof minPrice !== 'undefined' ? minPrice : '' %>" 
+                                    placeholder="Min" class="form-control">
+                            </div>
+                            <div class="price-separator">-</div>
+                            <div class="price-input-group">
+                                <input type="number" id="maxPrice" name="maxPrice" 
+                                    value="<%= typeof maxPrice !== 'undefined' ? maxPrice : '' %>" 
+                                    placeholder="Max" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brand Filter -->
+                <div class="filter-section">
+                    <h3 class="filter-title">Brand</h3>
+                    <div class="filter-dropdown">
+                        <select name="brand" class="form-select">
+                            <option value="">All Brands</option>
+                            <% if (typeof brands !== 'undefined' && brands.length > 0) { %>
+                                <% brands.forEach(function(brand) { %>
+                                    <option value="<%= brand %>" 
+                                        <%= (brandFilter === brand) ? 'selected' : '' %>>
+                                        <%= brand %>
+                                    </option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Apply Filters Button -->
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a href="/products" class="btn btn-secondary">Clear All</a>
+                </div>
+            </form>
+        </aside>
+
+        <!-- Products Content -->
+        <main class="products-content">
+            <div class="products-header">
+                <h1 class="products-title">
+                    <% if (typeof categoryFilter !== 'undefined' && categoryFilter) { %>
+                        <%= categoryFilter %> Headphones
+                    <% } else { %>
+                        All Headphones
+                    <% } %>
+                    <% if (typeof totalProducts !== 'undefined') { %>
+                        <span class="product-count">(<%= totalProducts %> products)</span>
+                    <% } %>
+                </h1>
+
+                <div class="products-controls">
+                    <div class="search-container">
+                        <form action="/products" method="GET" class="search-form">
+                            <input type="text" name="search" placeholder="Search products..." 
+                                class="search-input" 
+                                value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
+                            <button type="submit" class="search-button">
+                                <span class="material-icons">search</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="sort-container">
+                        <select name="sort" class="sort-select">
+                            <option value="newest" <%= (sortBy === 'newest') ? 'selected' : '' %>>Newest</option>
+                            <option value="price-low" <%= (sortBy === 'price-low') ? 'selected' : '' %>>Price: Low to High</option>
+                            <option value="price-high" <%= (sortBy === 'price-high') ? 'selected' : '' %>>Price: High to Low</option>
+                            <option value="name-az" <%= (sortBy === 'name-az') ? 'selected' : '' %>>A-Z</option>
+                            <option value="name-za" <%= (sortBy === 'name-za') ? 'selected' : '' %>>Z-A</option>
+                            <option value="rating" <%= (sortBy === 'rating') ? 'selected' : '' %>>Top Rated</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid">
+                <% if (typeof products !== 'undefined' && products.length > 0) { %>
+                    <% products.forEach(function(product) { %>
+                        <div class="product-card">
+                            <div class="product-card-image">
+                                <a href="/product/<%= product._id %>">
+                                    <img src="<%= product.mainImage %>" alt="<%= product.name %>" loading="lazy">
+                                </a>
+                                <% if (product.discountPercentage > 0) { %>
+                                    <span class="product-discount">-<%= product.discountPercentage %>%</span>
+                                <% } %>
+                            </div>
+                            <div class="product-card-content">
+                                <h3 class="product-name">
+                                    <a href="/product/<%= product._id %>"><%= product.name %></a>
+                                </h3>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <span class="material-icons">
+                                                <%= i <= Math.floor(product.ratings.average) ? 'star' : 
+                                                    (i - 0.5 <= product.ratings.average ? 'star_half' : 'star_outline') %>
+                                            </span>
+                                        <% } %>
+                                    </div>
+                                    <span class="rating-count">(<%= product.ratings.count %>)</span>
+                                </div>
+                                <div class="product-price">
+                                    <% if (product.discountPercentage > 0) { %>
+                                        <span class="regular-price">₹<%= product.regularPrice.toFixed(2) %></span>
+                                    <% } %>
+                                    <span class="sale-price">₹<%= product.salePrice.toFixed(2) %></span>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="no-products">
+                        <span class="material-icons">search_off</span>
+                        <h3>No products found</h3>
+                        <p>Try adjusting your filters or search criteria</p>
+                        <a href="/products" class="btn btn-primary">Clear All Filters</a>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Pagination -->
+            <% if (totalPages > 1) { %>
+                <div class="pagination-wrapper">
+                    <div class="pagination">
+                        <!-- Previous Button -->
+                        <% if (hasPrevPage) { %>
+                            <button
+                                class="page-btn pagination-btn"
+                                data-page="<%= prevPage %>"
+                                data-category="<%= categoryFilter || '' %>"
+                                data-search="<%= searchQuery || '' %>"
+                                data-sort="<%= sortBy || '' %>"
+                                data-min="<%= minPrice || '' %>"
+                                data-max="<%= maxPrice || '' %>">
+                                <span class="material-icons">chevron_left</span>
+                            </button>
+                        <% } else { %>
+                            <button class="page-btn" disabled>
+                                <span class="material-icons">chevron_left</span>
+                            </button>
+                        <% } %>
+
+                        <!-- Page Numbers -->
+                        <% if (typeof pageNumbers !== 'undefined' && pageNumbers.length > 0) { %>
+                            <% pageNumbers.forEach(pageNum => { %>
+                                <% if (pageNum === currentPage) { %>
+                                    <button class="page-btn active"><%= pageNum %></button>
+                                <% } else { %>
+                                    <button
+                                        class="page-btn pagination-btn"
+                                        data-page="<%= pageNum %>"
+                                        data-category="<%= categoryFilter || '' %>"
+                                        data-search="<%= searchQuery || '' %>"
+                                        data-sort="<%= sortBy || '' %>"
+                                        data-min="<%= minPrice || '' %>"
+                                        data-max="<%= maxPrice || '' %>">
+                                        <%= pageNum %>
+                                    </button>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
+
+                        <!-- Next Button -->
+                        <% if (hasNextPage) { %>
+                            <button
+                                class="page-btn pagination-btn"
+                                data-page="<%= nextPage %>"
+                                data-category="<%= categoryFilter || '' %>"
+                                data-search="<%= searchQuery || '' %>"
+                                data-sort="<%= sortBy || '' %>"
+                                data-min="<%= minPrice || '' %>"
+                                data-max="<%= maxPrice || '' %>">
+                                <span class="material-icons">chevron_right</span>
+                            </button>
+                        <% } else { %>
+                            <button class="page-btn" disabled>
+                                <span class="material-icons">chevron_right</span>
+                            </button>
+                        <% } %>
+                    </div>
+                </div>
+            <% } %>
+        </main>
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterToggle = document.getElementById('filterToggle');
+        const filterClose = document.getElementById('filterClose');
+        const filterSidebar = document.getElementById('filterSidebar');
+        const filterOverlay = document.getElementById('filterOverlay');
+        const productsContent = document.querySelector('.products-content');
+
+        // Store the element that had focus before opening the sidebar
+        let previouslyFocusedElement = null;
+
+        // Get focusable elements within the sidebar
+        function getFocusableElements() {
+            return filterSidebar.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+        }
+
+        // Open filter sidebar
+        function openFilterSidebar() {
+            // Store current focus
+            previouslyFocusedElement = document.activeElement;
+
+            // Add active classes
+            filterSidebar.classList.add('active');
+            filterOverlay.classList.add('active');
+            filterToggle.classList.add('active');
+            productsContent.classList.add('with-filter');
+
+            // Update ARIA attributes
+            filterToggle.setAttribute('aria-expanded', 'true');
+            filterSidebar.setAttribute('aria-hidden', 'false');
+            filterSidebar.setAttribute('aria-modal', 'true');
+            filterOverlay.setAttribute('aria-hidden', 'false');
+
+            // Focus management
+            setTimeout(() => {
+                filterClose.focus();
+            }, 100);
+
+            // Prevent body scroll on mobile
+            if (window.innerWidth <= 768) {
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Close filter sidebar
+        function closeFilterSidebar() {
+            // Remove active classes
+            filterSidebar.classList.remove('active');
+            filterOverlay.classList.remove('active');
+            filterToggle.classList.remove('active');
+            productsContent.classList.remove('with-filter');
+
+            // Update ARIA attributes
+            filterToggle.setAttribute('aria-expanded', 'false');
+            filterSidebar.setAttribute('aria-hidden', 'true');
+            filterSidebar.setAttribute('aria-modal', 'false');
+            filterOverlay.setAttribute('aria-hidden', 'true');
+
+            // Restore focus
+            if (previouslyFocusedElement) {
+                previouslyFocusedElement.focus();
+                previouslyFocusedElement = null;
+            }
+
+            // Restore body scroll
+            document.body.style.overflow = '';
+        }
+
+        // Event listeners
+        filterToggle.addEventListener('click', openFilterSidebar);
+        filterClose.addEventListener('click', closeFilterSidebar);
+        filterOverlay.addEventListener('click', closeFilterSidebar);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (!filterSidebar.classList.contains('active')) return;
+
+            // Close on Escape key
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeFilterSidebar();
+                return;
+            }
+
+            // Tab trapping within sidebar
+            if (e.key === 'Tab') {
+                const focusableElements = getFocusableElements();
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (e.shiftKey) {
+                    // Shift + Tab
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    // Tab
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && filterSidebar.classList.contains('active')) {
+                document.body.style.overflow = '';
+            } else if (window.innerWidth <= 768 && filterSidebar.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            }
+        });
+
+        // Handle form select changes
+        const formSelects = document.querySelectorAll('.form-select');
+        formSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                document.getElementById('filter-form').submit();
+            });
+        });
+
+        // Handle sort select changes
+        const sortSelect = document.querySelector('.sort-select');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', function() {
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.set('sort', this.value);
+                window.location.href = currentUrl.toString();
+            });
+        }
+
+        // Handle pagination with AJAX
+        const paginationContainer = document.querySelector('.pagination-wrapper');
+        const productGrid = document.querySelector('.products-grid'); // Products container
+
+        if (paginationContainer) {
+            paginationContainer.addEventListener('click', async (e) => {
+                if (e.target.closest('.pagination-btn')) {
+                    const btn = e.target.closest('.pagination-btn');
+
+                    const page = btn.dataset.page || 1;
+                    const category = btn.dataset.category || '';
+                    const search = btn.dataset.search || '';
+                    const sort = btn.dataset.sort || '';
+                    const minPrice = btn.dataset.min || '';
+                    const maxPrice = btn.dataset.max || '';
+
+                    try {
+                        const url = `/products?page=${page}&category=${category}&search=${search}&sort=${sort}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+
+                        const res = await fetch(url, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (!res.ok) throw new Error('Failed to fetch products');
+
+                        const html = await res.text();
+
+                        // Replace the product grid and pagination content
+                        const temp = document.createElement('div');
+                        temp.innerHTML = html;
+
+                        const newGrid = temp.querySelector('.products-grid');
+                        const newPagination = temp.querySelector('.pagination-wrapper');
+
+                        if (newGrid && productGrid) {
+                            productGrid.innerHTML = newGrid.innerHTML;
+                        }
+
+                        if (newPagination && paginationContainer) {
+                            paginationContainer.innerHTML = newPagination.innerHTML;
+                        }
+
+                    } catch (err) {
+                        console.error('Pagination fetch error:', err);
+                    }
+                }
+            });
+        }
+    });
+</script>

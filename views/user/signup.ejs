@@ -1,0 +1,305 @@
+<div class="auth-page">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-form-container">
+                <div class="auth-header">
+                    <h1>Create an Account</h1>
+                    <p>Join Phoenix and experience premium audio</p>
+                </div>
+
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <% if (typeof conflictFields !== 'undefined' && conflictFields) { %>
+                        <!-- Show specific field conflicts inline instead of general alert -->
+                    <% } else { %>
+                        <!-- Show general errors in alert format -->
+                        <div class="alert alert-danger">
+                            <span class="material-icons">error</span>
+                            <div class="alert-content">
+                                <strong>Error!</strong> <%- error %>
+                            </div>
+                            <button class="alert-close">
+                                <span class="material-icons">close</span>
+                            </button>
+                        </div>
+                    <% } %>
+                <% } %>
+
+                <form class="auth-form" action="/signup" method="POST" id="signup-form" novalidate data-validate>
+                    <div class="form-group">
+                        <label for="fullname" class="form-label">Full Name</label>
+                        <div class="form-input-group">
+                            <span class="material-icons form-input-icon">person</span>
+                            <input type="text" id="fullname" name="fullname" class="form-control" placeholder="Full name" autocomplete="name" value="<%= typeof formData !== 'undefined' && formData ? formData.fullname || '' : '' %>">
+                        </div>
+                        <div id="fullname-error" class="field-error" role="alert"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email address</label>
+                        <div class="form-input-group">
+                            <span class="material-icons form-input-icon">email</span>
+                            <input type="email" id="email" name="email" class="form-control<% if (conflictFields && conflictFields.email === true) { %> error<% } %>" placeholder="Email" autocomplete="email" value="<%= typeof formData !== 'undefined' && formData ? formData.email || '' : '' %>">
+                        </div>
+                         <% if (conflictFields && conflictFields.email === true && errorMessages && errorMessages.email) { %>
+                        <div id="email-error" class="field-error" role="alert">
+                                <span class="material-icons error-icon">error</span>
+                                <%- errorMessages.email %>
+                                </div>
+                            <% } %>
+                        
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mobile" class="form-label">Mobile Number</label>
+                        <div class="form-input-group">
+                            <span class="material-icons form-input-icon">phone</span>
+                            <input type="tel" id="mobile" name="mobile" class="form-control<% if (conflictFields && conflictFields.mobile === true) { %> error<% } %>" placeholder="10-digit mobile number" autocomplete="tel" value="<%= typeof formData !== 'undefined' && formData ? formData.mobile || '' : '' %>">
+                        </div>
+                        
+                            <% if (conflictFields && conflictFields.mobile === true && errorMessages && errorMessages.mobile) { %>
+                               <div id="mobile-error" class="field-error" role="alert">
+                                <span class="material-icons error-icon">error</span>
+                                <%- errorMessages.mobile %>
+                                 </div>
+                            <% } %>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="form-input-group">
+                            <span class="material-icons form-input-icon">lock</span>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" autocomplete="new-password">
+                            <button type="button" class="password-toggle">
+                                <span class="material-icons">visibility_off</span>
+                            </button>
+                        </div>
+                        <div id="password-error" class="field-error" role="alert"></div>
+                        <div class="password-strength" id="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-progress" id="strength-progress"></div>
+                            </div>
+                            <span class="strength-text" id="strength-text">Password strength</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label">Confirm Password</label>
+                        <div class="form-input-group">
+                            <span class="material-icons form-input-icon">lock</span>
+                            <input type="password" id="confirm-password" name="confirmPassword" class="form-control" placeholder="Confirm password" autocomplete="new-password">
+                        </div>
+                        <div id="confirm-password-error" class="field-error" role="alert"></div>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" id="terms" name="terms" class="form-check-input">
+                        <label for="terms" class="form-check-label">I agree to Phoenix's <a href="/terms" class="link-terms">Terms of Service</a> and <a href="/privacy" class="link-terms">Privacy Policy</a></label>
+                        <div id="terms-error" class="field-error" role="alert"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+
+                <div class="social-login-divider">
+                    <span>OR</span>
+                </div>
+
+                <div class="social-login-buttons">
+                    <a href="/auth/google" class="btn btn-outline social-btn google">
+                        <img src="https://img.icons8.com/color/20/000000/google-logo.png" alt="Google">
+                        Sign up with Google
+                    </a>
+                </div>
+
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="/login" class="auth-link">Login</a></p>
+                </div>
+            </div>
+            
+            <div class="auth-banner">
+                <div class="auth-banner-content">
+                    <div class="auth-logo">
+                        <img src="/images/phoenix-logo.png" alt="Phoenix Headphones">
+                    </div>
+                    <h2>Join Our Community</h2>
+                    <p>Create an account to access exclusive promotions, early product releases, and personalized recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification Style -->
+<link rel="stylesheet" href="/css/user/signup.css">
+<link rel="stylesheet" href="/css/user/signup-inline.css">
+
+<link rel="stylesheet" href="/css/form-validation.css">
+
+<script src="/js/form-validation.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const signupForm = document.getElementById('signup-form');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const strengthProgress = document.getElementById('strength-progress');
+        const strengthText = document.getElementById('strength-text');
+
+        // Initialize form validation
+        const validator = new FormValidator(signupForm, {
+            validateOnBlur: true,
+            validateOnInput: true,
+            showSuccessStates: false
+        });
+
+        // Setup validation rules
+        validator.setupRequiredField('fullname', 'Full name is required');
+        validator.addValidator('fullname', FormValidator.validators.minLength(2), 'Full name must be at least 2 characters');
+        validator.addValidator('fullname', FormValidator.validators.maxLength(50), 'Full name must be no more than 50 characters');
+        validator.addValidator('fullname', FormValidator.validators.pattern(/^[a-zA-Z\s]+$/), 'Full name can only contain letters and spaces');
+
+        validator.setupRequiredField('email', 'Email address is required');
+        validator.setupEmailField('email', 'Please enter a valid email address');
+
+        validator.setupRequiredField('mobile', 'Mobile number is required');
+        validator.addValidator('mobile', FormValidator.validators.phone, 'Mobile number must be 10 digits and start with 6, 7, 8, or 9');
+
+        validator.setupRequiredField('password', 'Password is required');
+        validator.setupPasswordField('password', 8, true);
+
+        validator.setupRequiredField('confirmPassword', 'Please confirm your password');
+        validator.setupMatchField('confirmPassword', 'password', 'Passwords do not match');
+
+        validator.setupRequiredField('terms', 'You must agree to the terms and conditions');
+
+        // Password visibility toggle
+        const passwordToggle = document.querySelector('.password-toggle');
+        if (passwordToggle) {
+            passwordToggle.addEventListener('click', function () {
+                const icon = this.querySelector('.material-icons');
+
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.textContent = 'visibility';
+                } else {
+                    passwordInput.type = 'password';
+                    icon.textContent = 'visibility_off';
+                }
+            });
+        }
+        
+        // Password strength indicator
+        
+        if (passwordInput && strengthProgress && strengthText) {
+            passwordInput.addEventListener('input', function() {
+                const value = passwordInput.value;
+                let strength = 0;
+                
+                // Check password length
+                if (value.length >= 8) {
+                    strength += 25;
+                }
+                
+                // Check for uppercase letters
+                if (/[A-Z]/.test(value)) {
+                    strength += 25;
+                }
+                
+                // Check for lowercase letters
+                if (/[a-z]/.test(value)) {
+                    strength += 25;
+                }
+                
+                // Check for numbers or special characters
+                if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(value)) {
+                    strength += 25;
+                }
+                
+                // Update UI
+                strengthProgress.style.width = `${strength}%`;
+                
+                if (strength === 0) {
+                    strengthProgress.style.backgroundColor = '#EEEEEE';
+                    strengthText.textContent = 'Password strength';
+                } else if (strength <= 25) {
+                    strengthProgress.style.backgroundColor = '#F44336';
+                    strengthText.textContent = 'Weak';
+                } else if (strength <= 50) {
+                    strengthProgress.style.backgroundColor = '#FF9800';
+                    strengthText.textContent = 'Fair';
+                } else if (strength <= 75) {
+                    strengthProgress.style.backgroundColor = '#2196F3';
+                    strengthText.textContent = 'Good';
+                } else {
+                    strengthProgress.style.backgroundColor = '#4CAF50';
+                    strengthText.textContent = 'Strong';
+                }
+            });
+        }
+        
+        // Form validation and submission
+        if (signupForm) {
+            signupForm.addEventListener('submit', function(e) {
+                // Let the form submit normally to the server
+                if (!validator.validateForm()) {
+                    e.preventDefault();
+                    validator.focusFirstError();
+                }
+            });
+        }
+        
+
+
+
+        // Handle conflict error states
+        <% if (conflictFields && (conflictFields.email === true || conflictFields.mobile === true)) { %>
+            // Add error classes to conflicting fields
+            <% if (conflictFields.email === true) { %>
+                const emailInput = document.getElementById('email');
+                const emailGroup = emailInput.closest('.form-input-group');
+                emailInput.classList.add('error');
+                emailGroup.classList.add('error');
+
+                // Focus on email field if it has conflict
+                emailInput.focus();
+                emailInput.select();
+            <% } %>
+
+            <% if (conflictFields.mobile === true) { %>
+                const mobileInput = document.getElementById('mobile');
+                const mobileGroup = mobileInput.closest('.form-input-group');
+                mobileInput.classList.add('error');
+                mobileGroup.classList.add('error');
+
+                // Focus on mobile field if only mobile has conflict
+                <% if (conflictFields.email !== true) { %>
+                    mobileInput.focus();
+                    mobileInput.select();
+                <% } %>
+            <% } %>
+
+            // Clear error states when user starts typing
+            function clearFieldError(fieldId) {
+                const input = document.getElementById(fieldId);
+                const group = input.closest('.form-input-group');
+                const errorDiv = document.getElementById(fieldId + '-error');
+
+                input.classList.remove('error');
+                group.classList.remove('error');
+                errorDiv.innerHTML = '';
+            }
+
+            // Add event listeners to clear errors on input
+            <% if (conflictFields && conflictFields.email === true) { %>
+                document.getElementById('email').addEventListener('input', function() {
+                    clearFieldError('email');
+                });
+            <% } %>
+
+            <% if (conflictFields && conflictFields.mobile === true) { %>
+                document.getElementById('mobile').addEventListener('input', function() {
+                    clearFieldError('mobile');
+                });
+            <% } %>
+        <% } %>
+    });
+</script>
