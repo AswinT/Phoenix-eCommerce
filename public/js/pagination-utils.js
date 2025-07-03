@@ -20,14 +20,12 @@ class PaginationManager {
         this.isLoading = true;
         this.container.classList.add(this.loadingClass);
         
-        // Disable all pagination links
         const paginationLinks = this.container.querySelectorAll('.pagination .page-link');
         paginationLinks.forEach(link => {
             link.style.pointerEvents = 'none';
             link.style.opacity = '0.6';
         });
 
-        // Add loading spinner if not exists
         if (!this.container.querySelector('.pagination-spinner')) {
             const spinner = this.createSpinner();
             const paginationContainer = this.container.querySelector('.pagination-container');
@@ -44,14 +42,12 @@ class PaginationManager {
         this.isLoading = false;
         this.container.classList.remove(this.loadingClass);
         
-        // Re-enable all pagination links
         const paginationLinks = this.container.querySelectorAll('.pagination .page-link');
         paginationLinks.forEach(link => {
             link.style.pointerEvents = '';
             link.style.opacity = '';
         });
 
-        // Remove loading spinner
         const spinner = this.container.querySelector('.pagination-spinner');
         if (spinner) {
             spinner.remove();
@@ -65,7 +61,6 @@ class PaginationManager {
         this.hideLoading();
         this.container.classList.add(this.errorClass);
         
-        // Show error message
         const errorElement = this.createErrorMessage(message);
         const paginationContainer = this.container.querySelector('.pagination-container');
         if (paginationContainer) {
@@ -142,7 +137,6 @@ class PaginationManager {
      * Default error handler
      */
     defaultErrorHandler(error) {
-        console.error('Pagination error:', error);
         const message = error.message || 'Failed to load page. Please try again.';
         this.showError(message);
     }
@@ -154,7 +148,6 @@ class PaginationManager {
         const paginationContainer = this.container.querySelector('.pagination-container');
         if (!paginationContainer) return;
 
-        // Add click handlers to pagination links
         paginationContainer.addEventListener('click', async (e) => {
             const pageLink = e.target.closest('.page-link');
             if (!pageLink || pageLink.classList.contains('disabled') || this.isLoading) {
@@ -162,7 +155,6 @@ class PaginationManager {
                 return;
             }
 
-            // Extract page number from href or data attribute
             const href = pageLink.getAttribute('href');
             if (href && href !== '#') {
                 e.preventDefault();
@@ -180,13 +172,11 @@ class PaginationManager {
         const paginationContainer = this.container.querySelector('.pagination-container');
         if (!paginationContainer || !paginationData) return;
 
-        // Update pagination info
         const paginationInfo = paginationContainer.querySelector('.pagination-info .pagination-text');
         if (paginationInfo && paginationData.startItem && paginationData.endItem && paginationData.totalItems) {
             paginationInfo.textContent = `Showing ${paginationData.startItem} to ${paginationData.endItem} of ${paginationData.totalItems} results`;
         }
 
-        // Update active page
         const pageItems = paginationContainer.querySelectorAll('.page-item');
         pageItems.forEach(item => {
             item.classList.remove('active');
@@ -222,10 +212,9 @@ class PaginationForm {
             e.preventDefault();
             
             try {
-                // Reset to page 1 when submitting form
                 await this.paginationManager.navigateToPage(1, this.getFormData());
             } catch (error) {
-                console.error('Form submission error:', error);
+                // Error already handled by pagination manager
             }
         });
     }

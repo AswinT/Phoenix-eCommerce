@@ -52,18 +52,15 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
                 }
                 return done(null, user);
             } else {
-                // Check if user exists with same email
                 const existingUser = profile.emails && profile.emails[0] ? 
                     await User.findOne({ email: profile.emails[0].value }) : null;
                     
                 if (existingUser) {
-                    // Link Google account to existing user
                     existingUser.googleId = profile.id;
                     await existingUser.save();
                     return done(null, existingUser);
                 }
                 
-                // Create new user if email exists
                 if (profile.emails && profile.emails[0]) {
                     user = new User({
                         fullname: profile.displayName,

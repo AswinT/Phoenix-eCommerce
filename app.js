@@ -66,7 +66,6 @@ app.use((req, res, next) => {
     if (!req.path.startsWith('/admin')) {
         expressLayouts(req, res, next);
     } else {
-        // Skip layout for admin routes to ensure complete UI separation
         next();
     }
 });
@@ -81,11 +80,11 @@ app.use(express.json());
 app.use(session({
     secret: process.env.SESSION_SECRET_KEY,
     resave: false,
-    saveUninitialized: false, // Changed from true for security
+    saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Dynamic based on environment
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 24 * 60 * 60 * 1000
     }
 }));
 

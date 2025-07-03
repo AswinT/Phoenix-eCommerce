@@ -11,23 +11,19 @@ const getOtpExpiryTimestamp = (otpExpiry) => {
         return null;
     }
 
-    // If it's already a number (timestamp), return it
     if (typeof otpExpiry === 'number') {
         return otpExpiry;
     }
 
-    // If it's a string, try to parse it as a date
     if (typeof otpExpiry === 'string') {
         const date = new Date(otpExpiry);
         return isNaN(date.getTime()) ? null : date.getTime();
     }
 
-    // If it's a Date object, get the timestamp
     if (otpExpiry instanceof Date) {
         return otpExpiry.getTime();
     }
 
-    // If it has a getTime method, try to use it
     if (typeof otpExpiry.getTime === 'function') {
         try {
             return otpExpiry.getTime();
@@ -37,7 +33,6 @@ const getOtpExpiryTimestamp = (otpExpiry) => {
         }
     }
 
-    // Fallback: try to convert to number
     const timestamp = Number(otpExpiry);
     return isNaN(timestamp) ? null : timestamp;
 };
@@ -48,23 +43,19 @@ const getOtpExpiryDate = (otpExpiry) => {
         return null;
     }
 
-    // If it's already a Date object, return it
     if (otpExpiry instanceof Date) {
         return otpExpiry;
     }
 
-    // If it's a number (timestamp), create Date from it
     if (typeof otpExpiry === 'number') {
         return new Date(otpExpiry);
     }
 
-    // If it's a string, try to parse it as a date
     if (typeof otpExpiry === 'string') {
         const date = new Date(otpExpiry);
         return isNaN(date.getTime()) ? null : date;
     }
 
-    // Fallback: try to convert to number and create Date
     const timestamp = Number(otpExpiry);
     return isNaN(timestamp) ? null : new Date(timestamp);
 };
@@ -75,19 +66,16 @@ const homePage = async (req, res, next) => {
         const { createPagination, buildQueryParams } = require('../../utils/pagination');
         let successMessage = null;
 
-        // Check for auth success message
         if (req.query.auth === 'success') {
             successMessage = 'Successfully signed in with Google!';
         }
 
-        // Get featured products filter
         const filter = {
             isActive: true,
             isListed: true,
             isDeleted: false
         };
 
-        // Get all active categories for homepage display
         const categories = await Category.find({
             isListed: true,
             isDeleted: false
@@ -95,13 +83,10 @@ const homePage = async (req, res, next) => {
         .sort({ sortOrder: 1, name: 1 })
         .select('name description slug');
 
-        // Get total count for pagination
         const totalProducts = await Product.countDocuments(filter);
 
-        // Create pagination object
         const pagination = createPagination(req.query, totalProducts, 'HOMEPAGE_FEATURED');
 
-        // Generate page numbers array for the new pagination template
         const generatePageNumbers = (currentPage, totalPages, maxVisible = 5) => {
             const pages = [];
 
@@ -114,7 +99,6 @@ const homePage = async (req, res, next) => {
                 let start = Math.max(1, currentPage - halfVisible);
                 let end = Math.min(totalPages, start + maxVisible - 1);
 
-                // Adjust start if we're near the end
                 if (end - start + 1 < maxVisible) {
                     start = Math.max(1, end - maxVisible + 1);
                 }
@@ -129,17 +113,14 @@ const homePage = async (req, res, next) => {
 
         const pageNumbers = generatePageNumbers(pagination.currentPage, pagination.totalPages);
 
-        // Get featured products with pagination
         const featuredProducts = await Product.find(filter)
             .populate('categoryId', 'name')
-            .sort({ 'ratings.average': -1, createdAt: -1 }) // Sort by rating first, then newest
+            .sort({ 'ratings.average': -1, createdAt: -1 })
             .skip(pagination.skip)
             .limit(pagination.limit);
 
-        // Build query parameters for pagination links
         const queryParams = buildQueryParams(req.query, []);
 
-        // Check if this is an AJAX request
         const isAjax = req.headers['x-requested-with'] === 'XMLHttpRequest';
 
         const renderData = {
@@ -163,10 +144,8 @@ const homePage = async (req, res, next) => {
         };
 
         if (isAjax) {
-            // For AJAX requests, return just the featured products section
             res.render('user/home', renderData);
         } else {
-            // For regular requests, return the full page
             res.render('user/home', renderData);
         }
     } catch (error) {
@@ -193,7 +172,6 @@ const postLogin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        // Basic validation
         if (!email || !password) {
             return res.render('user/login', {
                 error: 'Please fill in all fields',
@@ -201,7 +179,6 @@ const postLogin = async (req, res, next) => {
             });
         }
 
-        // Find user
         const user = await User.findOne({ email: sanitizeInput(email.toLowerCase()) });
         if (!user) {
             return res.render('user/login', {
@@ -210,7 +187,6 @@ const postLogin = async (req, res, next) => {
             });
         }
 
-        // Check if user is blocked
         if (user.isBlocked) {
             return res.render('user/login', {
                 error: 'Your account has been blocked. Please contact support.',
@@ -218,7 +194,6 @@ const postLogin = async (req, res, next) => {
             });
         }
 
-        // Check if user is verified
         if (!user.isVerified) {
             return res.render('user/login', {
                 error: 'Please verify your email address first',
@@ -226,7 +201,6 @@ const postLogin = async (req, res, next) => {
             });
         }
 
-        // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.render('user/login', {
@@ -235,7 +209,6 @@ const postLogin = async (req, res, next) => {
             });
         }
 
-        // Set session
         req.session.user = user._id;
         req.session.username = user.fullname;
 
