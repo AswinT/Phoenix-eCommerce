@@ -5,7 +5,10 @@ const { sanitizeInput } = require("../../utils/validation");
 // List products with search, filter, sort, and pagination
 const listProducts = async (req, res, next) => {
   try {
-    const { createPagination, buildQueryParams } = require('../../utils/pagination');
+    const {
+      createPagination,
+      buildQueryParams,
+    } = require("../../utils/pagination");
 
     // Get query parameters
     const searchQuery = req.query.search || "";
@@ -98,7 +101,11 @@ const listProducts = async (req, res, next) => {
     const totalProducts = await Product.countDocuments(filter);
 
     // Create pagination object
-    const pagination = createPagination(req.query, totalProducts, 'USER_PRODUCTS');
+    const pagination = createPagination(
+      req.query,
+      totalProducts,
+      "USER_PRODUCTS"
+    );
 
     // Generate page numbers array for the new pagination template
     const generatePageNumbers = (currentPage, totalPages, maxVisible = 5) => {
@@ -126,7 +133,10 @@ const listProducts = async (req, res, next) => {
       return pages;
     };
 
-    const pageNumbers = generatePageNumbers(pagination.currentPage, pagination.totalPages);
+    const pageNumbers = generatePageNumbers(
+      pagination.currentPage,
+      pagination.totalPages
+    );
 
     // Get products with pagination
     let query = Product.find(filter)
@@ -136,7 +146,7 @@ const listProducts = async (req, res, next) => {
 
     // Apply sorting with proper collation for alphabetical sorts
     if (sortBy === "name-az" || sortBy === "name-za") {
-      query = query.sort(sortObject).collation({ locale: 'en', strength: 2 });
+      query = query.sort(sortObject).collation({ locale: "en", strength: 2 });
     } else {
       query = query.sort(sortObject);
     }
@@ -182,10 +192,17 @@ const listProducts = async (req, res, next) => {
     const priceRangeData = priceRange[0] || { minPrice: 0, maxPrice: 10000 };
 
     // Build query parameters for pagination links
-    const queryParams = buildQueryParams(req.query, ['search', 'category', 'brand', 'sort', 'minPrice', 'maxPrice']);
+    const queryParams = buildQueryParams(req.query, [
+      "search",
+      "category",
+      "brand",
+      "sort",
+      "minPrice",
+      "maxPrice",
+    ]);
 
     // Check if this is an AJAX request
-    const isAjax = req.headers['x-requested-with'] === 'XMLHttpRequest';
+    const isAjax = req.headers["x-requested-with"] === "XMLHttpRequest";
 
     const renderData = {
       products,
@@ -207,9 +224,9 @@ const listProducts = async (req, res, next) => {
       nextPage: pagination.nextPage,
       prevPage: pagination.prevPage,
       pagination,
-      baseUrl: '/products',
+      baseUrl: "/products",
       queryParams,
-      additionalCSS: ['/css/user/products.css', '/css/pagination.css']
+      additionalCSS: ["/css/user/products.css", "/css/pagination.css"],
     };
 
     if (isAjax) {
@@ -390,7 +407,7 @@ const viewProduct = async (req, res, next) => {
         product: demoProduct,
         relatedProducts,
         breadcrumbs,
-        additionalCSS: ['/css/user/product-detail.css', '/css/pagination.css']
+        additionalCSS: ["/css/user/product-detail.css", "/css/pagination.css"],
       });
     }
 
@@ -483,7 +500,7 @@ const viewProduct = async (req, res, next) => {
       product,
       relatedProducts,
       breadcrumbs,
-      additionalCSS: ['/css/user/product-detail.css', '/css/pagination.css']
+      additionalCSS: ["/css/user/product-detail.css", "/css/pagination.css"],
     });
     console.log("✅ Product detail page rendered successfully");
   } catch (error) {
