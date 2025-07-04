@@ -140,22 +140,17 @@ const productSchema = new mongoose.Schema({
         trim: true
     }]
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
-// Index for better query performance
-productSchema.index({ name: 1 });
-productSchema.index({ category: 1 });
-productSchema.index({ categoryId: 1 });
-productSchema.index({ brand: 1 });
-productSchema.index({ modelNumber: 1 });
-productSchema.index({ isActive: 1 });
-productSchema.index({ isListed: 1, isDeleted: 1 });
-productSchema.index({ regularPrice: 1 });
-productSchema.index({ salePrice: 1 });
-productSchema.index({ 'ratings.average': -1 });
-productSchema.index({ connectivity: 1 });
-productSchema.index({ noiseCancellation: 1 });
+// Virtual for reviews (to be populated)
+productSchema.virtual('reviews', {
+    ref: 'Review',
+    localField: '_id',
+    foreignField: 'product'
+});
 
 // Virtual for checking if product is available
 productSchema.virtual('isAvailable').get(function() {

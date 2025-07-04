@@ -226,12 +226,12 @@ const viewProduct = async (req, res, next) => {
       .populate("categoryId")
       .populate({
         path: "reviews",
-        match: { isActive: true },
+        match: { status: 'approved', isDeleted: false },
         options: { sort: { createdAt: -1 } },
         populate: {
-          path: "userId",
-          select: "fullname",
-        },
+          path: "user",
+          select: "fullname"
+        }
       });
 
     if (!product) {
